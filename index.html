@@ -6,210 +6,212 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
 <meta name="apple-mobile-web-app-title" content="HK Tracker"/>
-<meta name="theme-color" content="#1a1a2e"/>
+<meta name="theme-color" content="#0d0d1a"/>
 <title>HK Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
-:root {
-  --bg: #0d0d1a;
-  --bg2: #12121f;
-  --card: #1a1a2e;
-  --card2: #1f1f35;
-  --border: #2a2a45;
-  --border2: #353560;
-  --blue: #4f8ef7;
-  --blue2: #6fa3ff;
-  --green: #2ecc8a;
-  --red: #ff4f6d;
-  --amber: #ffb03a;
-  --purple: #9b7fe8;
-  --text: #e8e8ff;
-  --text2: #9494bb;
-  --text3: #5a5a7a;
-  --font: 'Outfit', sans-serif;
-  --mono: 'JetBrains Mono', monospace;
-  --radius: 14px;
-  --radius-sm: 8px;
+:root{
+  --bg:#0d0d1a;--bg2:#12121f;--card:#1a1a2e;--card2:#1f1f35;
+  --border:#2a2a45;--border2:#353560;
+  --blue:#4f8ef7;--green:#2ecc8a;--red:#ff4f6d;--amber:#ffb03a;--purple:#9b7fe8;
+  --text:#e8e8ff;--text2:#9494bb;--text3:#5a5a7a;
+  --font:'Outfit',sans-serif;--mono:'JetBrains Mono',monospace;
+  --r:14px;--rs:8px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden}
-body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px}
+#app{display:flex;flex-direction:column;height:100vh;max-width:520px;margin:0 auto}
 
-/* Layout */
-#app{display:flex;flex-direction:column;height:100vh;max-width:520px;margin:0 auto;position:relative}
-.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:relative;z-index:10}
+/* Topbar */
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:10}
 .topbar-left{display:flex;align-items:center;gap:10px}
-.topbar-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--blue),var(--purple));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.topbar-title{font-size:16px;font-weight:700;letter-spacing:-.3px}
-.topbar-sub{font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:1px}
-.topbar-right{display:flex;align-items:center;gap:8px}
-.lang-btn{background:var(--card2);border:1px solid var(--border);border-radius:20px;color:var(--text2);font-size:11px;font-weight:600;padding:4px 10px;cursor:pointer;font-family:var(--font);transition:all .15s}
+.hotel-badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.04em;cursor:pointer;border:none;font-family:var(--font)}
+.topbar-title{font-size:14px;font-weight:700;letter-spacing:-.3px}
+.topbar-sub{font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:5px}
+.lang-btn{background:var(--card2);border:1px solid var(--border);border-radius:20px;color:var(--text2);font-size:11px;font-weight:600;padding:3px 8px;cursor:pointer;font-family:var(--font)}
 .lang-btn.active{background:var(--blue);border-color:var(--blue);color:#fff}
 
+/* Tabs */
 .tabs-bar{background:var(--bg2);border-bottom:1px solid var(--border);display:flex;flex-shrink:0}
-.tab-btn{flex:1;padding:10px 4px;font-size:11px;font-weight:600;color:var(--text3);background:none;border:none;cursor:pointer;font-family:var(--font);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;white-space:nowrap}
+.tab-btn{flex:1;padding:9px 4px;font-size:11px;font-weight:600;color:var(--text3);background:none;border:none;cursor:pointer;font-family:var(--font);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;white-space:nowrap}
 .tab-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
 
-.content{flex:1;overflow-y:auto;padding:14px 16px 80px;-webkit-overflow-scrolling:touch}
+.content{flex:1;overflow-y:auto;padding:14px 14px 80px;-webkit-overflow-scrolling:touch}
 
 /* Cards */
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:10px}
 .card-title{font-size:15px;font-weight:700;margin-bottom:12px}
+.field{margin-bottom:11px}
+.fl{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px;display:block}
+.fi,.fs{width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:var(--rs);color:var(--text);padding:10px 11px;font-size:14px;font-family:var(--font);outline:none;transition:border-color .15s;-webkit-appearance:none}
+.fi:focus,.fs:focus{border-color:var(--blue)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g4{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sdiv{font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.08em;margin:14px 0 9px;display:flex;align-items:center;gap:8px}
+.sdiv::after{content:'';flex:1;height:1px;background:var(--border)}
 
-/* Form elements */
-.field{margin-bottom:12px}
-.field-label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px;display:block}
-.field-input,.field-select{width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text);padding:10px 12px;font-size:14px;font-family:var(--font);outline:none;transition:border-color .15s;-webkit-appearance:none;appearance:none}
-.field-input:focus,.field-select:focus{border-color:var(--blue)}
-.field-input::placeholder{color:var(--text3)}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.grid-4{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+/* Variance preview */
+.vp{background:var(--card2);border-radius:var(--rs);padding:10px 11px;margin:10px 0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.vi{display:flex;flex-direction:column;gap:2px}
+.vl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em}
+.vv{font-family:var(--mono);font-size:14px;font-weight:600}
 
-/* Section divider */
-.section-div{font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.08em;margin:16px 0 10px;display:flex;align-items:center;gap:8px}
-.section-div::after{content:'';flex:1;height:1px;background:var(--border)}
-
-/* Variance preview box */
-.var-preview{background:var(--card2);border-radius:var(--radius-sm);padding:10px 12px;margin:10px 0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.var-item{display:flex;flex-direction:column;gap:2px}
-.var-lbl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em}
-.var-val{font-family:var(--mono);font-size:14px;font-weight:600}
-
-/* Rating selector */
-.rating-row{display:flex;gap:6px;margin-top:4px}
-.rating-opt{flex:1;padding:8px 4px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:none;font-size:11px;font-weight:600;font-family:var(--font);cursor:pointer;text-align:center;transition:all .15s;color:var(--text2)}
-.rating-opt.sat.selected{background:rgba(46,204,138,.15);border-color:var(--green);color:var(--green)}
-.rating-opt.unsat.selected{background:rgba(255,79,109,.15);border-color:var(--red);color:var(--red)}
-.rating-opt.train.selected{background:rgba(255,176,58,.15);border-color:var(--amber);color:var(--amber)}
+/* Rating */
+.rrow{display:flex;gap:6px;margin-top:4px}
+.ropt{flex:1;padding:8px 4px;border-radius:var(--rs);border:1.5px solid var(--border);background:none;font-size:11px;font-weight:600;font-family:var(--font);cursor:pointer;text-align:center;transition:all .15s;color:var(--text2)}
+.ropt.sat.sel{background:rgba(46,204,138,.15);border-color:var(--green);color:var(--green)}
+.ropt.uns.sel{background:rgba(255,79,109,.15);border-color:var(--red);color:var(--red)}
+.ropt.trn.sel{background:rgba(255,176,58,.15);border-color:var(--amber);color:var(--amber)}
 
 /* Buttons */
-.btn{width:100%;padding:13px;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:700;font-family:var(--font);cursor:pointer;transition:all .15s}
-.btn-primary{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff}
-.btn-primary:active{opacity:.85;transform:scale(.98)}
-.btn-secondary{background:none;border:1.5px solid var(--border);color:var(--text2);margin-top:8px}
+.btn{width:100%;padding:13px;border:none;border-radius:var(--rs);font-size:14px;font-weight:700;font-family:var(--font);cursor:pointer;transition:all .15s}
+.btnp{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff}
+.btnp:active{opacity:.85;transform:scale(.98)}
+.btns{background:none;border:1.5px solid var(--border);color:var(--text2);margin-top:8px}
 
-/* Log cards */
-.log-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:10px}
-.log-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
-.log-name{font-size:15px;font-weight:700}
-.log-date{font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:2px}
-.var-badge{font-family:var(--mono);font-size:11px;font-weight:600;padding:3px 9px;border-radius:6px;white-space:nowrap}
-.stats-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
-.chip{background:var(--card2);border-radius:6px;padding:4px 8px;font-size:11px;color:var(--text3);font-family:var(--mono);display:flex;flex-direction:column;gap:0}
+/* Log */
+.lc{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:10px}
+.lh{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.ln{font-size:15px;font-weight:700}
+.ld{font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:2px}
+.vbadge{font-family:var(--mono);font-size:11px;font-weight:600;padding:3px 9px;border-radius:6px;white-space:nowrap}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.chip{background:var(--card2);border-radius:6px;padding:4px 8px;font-size:11px;color:var(--text3);font-family:var(--mono)}
 .chip strong{font-size:13px;color:var(--text);display:block}
-.time-row{background:var(--card2);border-radius:var(--radius-sm);padding:8px 10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
-.time-item{display:flex;flex-direction:column;gap:1px}
-.time-lbl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em}
-.time-val{font-family:var(--mono);font-size:12px;font-weight:600}
-.arrow{color:var(--border2);font-size:14px}
-.rooms-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
-.room-tag{background:var(--card2);border-radius:5px;padding:2px 7px;font-size:10px;font-family:var(--mono);color:var(--text3)}
-.room-tag span{color:var(--text);font-weight:600}
-.rating-tag{display:inline-flex;align-items:center;padding:2px 8px;border-radius:5px;font-size:10px;font-weight:600;margin-bottom:8px}
-.card-actions{display:flex;gap:6px;padding-top:10px;border-top:1px solid var(--border)}
-.act-btn{flex:1;padding:6px;border-radius:6px;font-size:11px;font-weight:600;border:1px solid var(--border);background:none;color:var(--text3);font-family:var(--font);cursor:pointer}
+.trow{background:var(--card2);border-radius:var(--rs);padding:8px 10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.ti{display:flex;flex-direction:column;gap:1px}
+.tl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em}
+.tv{font-family:var(--mono);font-size:12px;font-weight:600}
+.arr{color:var(--border2);font-size:14px}
+.rms{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+.rt{background:var(--card2);border-radius:5px;padding:2px 7px;font-size:10px;font-family:var(--mono);color:var(--text3)}
+.rt span{color:var(--text);font-weight:600}
+.rtag{display:inline-flex;align-items:center;padding:2px 8px;border-radius:5px;font-size:10px;font-weight:600;margin-bottom:8px}
+.ca{display:flex;gap:6px;padding-top:10px;border-top:1px solid var(--border)}
+.ab{flex:1;padding:6px;border-radius:6px;font-size:11px;font-weight:600;border:1px solid var(--border);background:none;color:var(--text3);font-family:var(--font);cursor:pointer}
 
-/* Filter row */
-.filter-row{display:flex;gap:8px;margin-bottom:12px}
-.filter-row input,.filter-row select{flex:1;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);padding:8px 10px;font-size:13px;font-family:var(--font);outline:none;-webkit-appearance:none}
-.filter-clear{background:var(--card2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text3);padding:8px 10px;cursor:pointer;font-family:var(--font);font-size:12px}
+/* Filter */
+.fr{display:flex;gap:8px;margin-bottom:12px}
+.fr input,.fr select{flex:1;background:var(--card);border:1px solid var(--border);border-radius:var(--rs);color:var(--text);padding:8px 10px;font-size:13px;font-family:var(--font);outline:none;-webkit-appearance:none}
+.fc{background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);color:var(--text3);padding:8px 10px;cursor:pointer;font-family:var(--font);font-size:12px}
 
-/* Daily totals banner */
-.daily-banner{background:linear-gradient(135deg,rgba(79,142,247,.1),rgba(155,127,232,.1));border:1px solid rgba(79,142,247,.25);border-radius:var(--radius);padding:12px 14px;margin-bottom:12px}
-.daily-banner-title{font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
-.daily-banner-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
-.daily-stat{text-align:center}
-.daily-stat-val{font-family:var(--mono);font-size:16px;font-weight:700;color:var(--text)}
-.daily-stat-lbl{font-size:9px;color:var(--text3);margin-top:1px;text-transform:uppercase;letter-spacing:.04em}
+/* Daily banner */
+.db{background:linear-gradient(135deg,rgba(79,142,247,.1),rgba(155,127,232,.1));border:1px solid rgba(79,142,247,.25);border-radius:var(--r);padding:11px 13px;margin-bottom:12px}
+.dbt{font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.dbg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.ds{text-align:center}
+.dsv{font-family:var(--mono);font-size:16px;font-weight:700}
+.dsl{font-size:9px;color:var(--text3);margin-top:1px;text-transform:uppercase;letter-spacing:.04em}
 
-/* Analytics */
-.range-pills{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
-.pill{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid var(--border);background:none;color:var(--text3);font-family:var(--font);cursor:pointer;transition:all .15s}
+/* Pills */
+.pills{display:flex;gap:6px;margin-bottom:13px;flex-wrap:wrap}
+.pill{padding:5px 11px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid var(--border);background:none;color:var(--text3);font-family:var(--font);cursor:pointer;transition:all .15s}
 .pill.active{background:var(--blue);color:#fff;border-color:var(--blue)}
-.summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
-.sum-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px;text-align:center}
-.sum-val{font-size:20px;font-weight:800;font-family:var(--mono);color:var(--blue)}
-.sum-lbl{font-size:9px;color:var(--text3);margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
-.staff-analytics-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:8px}
-.sa-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.sa-name{font-size:14px;font-weight:700}
-.sa-shifts{font-size:10px;color:var(--text3);font-family:var(--mono)}
-.sa-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
-.sa-stat{text-align:center}
-.sa-stat-val{font-family:var(--mono);font-size:14px;font-weight:600}
-.sa-stat-lbl{font-size:9px;color:var(--text3);margin-top:1px}
-.sa-breakdown{display:flex;gap:5px}
-.sa-bd-item{flex:1;text-align:center;border-radius:6px;padding:4px;font-size:10px;font-weight:600}
 
-/* Export button */
-.export-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:10px;background:var(--card2);border:1.5px solid var(--border2);border-radius:var(--radius-sm);color:var(--text2);font-size:13px;font-weight:600;font-family:var(--font);cursor:pointer;margin-bottom:14px;transition:all .15s}
-.export-btn:active{border-color:var(--blue);color:var(--blue)}
+/* Summary grid */
+.sg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:13px}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:var(--rs);padding:10px;text-align:center}
+.sv{font-size:20px;font-weight:800;font-family:var(--mono);color:var(--blue)}
+.sl{font-size:9px;color:var(--text3);margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
+
+/* Owner dashboard */
+.owner-compare{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.hcard{border-radius:var(--r);padding:14px;border:1.5px solid}
+.hcard-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.hcard-name{font-size:13px;font-weight:700}
+.hcard-code{font-size:10px;font-family:var(--mono);opacity:.7}
+.hcard-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
+.hm{text-align:center}
+.hmv{font-family:var(--mono);font-size:16px;font-weight:700}
+.hml{font-size:9px;color:var(--text3);margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
+.hcard-ratings{display:flex;gap:5px;margin-bottom:8px}
+.hri{flex:1;text-align:center;border-radius:6px;padding:4px;font-size:10px;font-weight:600}
+.hcard-drill{width:100%;padding:7px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:6px;color:var(--text2);font-size:11px;font-weight:600;font-family:var(--font);cursor:pointer}
+
+/* Staff analytics */
+.sac{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px;margin-bottom:8px}
+.sah{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.san{font-size:14px;font-weight:700}
+.sas{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:7px}
+.sav{font-family:var(--mono);font-size:14px;font-weight:600;text-align:center}
+.sal{font-size:9px;color:var(--text3);margin-top:1px;text-align:center}
+.sbd{display:flex;gap:5px;margin-bottom:5px}
+.sbi{flex:1;text-align:center;border-radius:6px;padding:4px;font-size:10px;font-weight:600}
+
+/* Export */
+.ebtn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:9px;background:var(--card2);border:1.5px solid var(--border2);border-radius:var(--rs);color:var(--text2);font-size:12px;font-weight:600;font-family:var(--font);cursor:pointer;margin-bottom:8px}
+.ebtn:active{border-color:var(--blue);color:var(--blue)}
 
 /* Settings */
-.settings-section{margin-bottom:22px}
-.settings-title{font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border)}
-.staff-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--card2);border-radius:var(--radius-sm);margin-bottom:6px}
-.staff-item-name{font-weight:600;font-size:13px}
-.staff-item-meta{font-size:10px;color:var(--text3);margin-top:1px}
-.remove-btn{background:none;border:1px solid var(--border);border-radius:6px;color:var(--text3);padding:4px 9px;font-size:11px;cursor:pointer;font-family:var(--font)}
-.add-row{display:flex;gap:8px;margin-top:10px}
-.add-row input{flex:1;background:var(--card2);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text);padding:9px 12px;font-size:13px;font-family:var(--font);outline:none}
-.add-row input:focus{border-color:var(--blue)}
-.add-row-btn{background:linear-gradient(135deg,var(--blue),var(--purple));border:none;border-radius:var(--radius-sm);color:#fff;padding:9px 14px;font-weight:700;font-size:13px;cursor:pointer;font-family:var(--font);white-space:nowrap}
-.std-row{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--card2);border-radius:var(--radius-sm);margin-bottom:5px}
-.std-lbl{font-size:12px;font-weight:600}
-.std-val{font-family:var(--mono);font-size:12px;color:var(--blue)}
+.ss{margin-bottom:20px}
+.st{font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.07em;margin-bottom:9px;padding-bottom:7px;border-bottom:1px solid var(--border)}
+.si{display:flex;align-items:center;justify-content:space-between;padding:9px 11px;background:var(--card2);border-radius:var(--rs);margin-bottom:6px}
+.sin{font-weight:600;font-size:13px}
+.sim{font-size:10px;color:var(--text3);margin-top:1px}
+.rb{background:none;border:1px solid var(--border);border-radius:6px;color:var(--text3);padding:4px 9px;font-size:11px;cursor:pointer;font-family:var(--font)}
+.ar{display:flex;gap:8px;margin-top:9px}
+.ar input{flex:1;background:var(--card2);border:1.5px solid var(--border);border-radius:var(--rs);color:var(--text);padding:9px 11px;font-size:13px;font-family:var(--font);outline:none}
+.ar input:focus{border-color:var(--blue)}
+.arb{background:linear-gradient(135deg,var(--blue),var(--purple));border:none;border-radius:var(--rs);color:#fff;padding:9px 13px;font-weight:700;font-size:13px;cursor:pointer;font-family:var(--font);white-space:nowrap}
+.stdr{display:flex;align-items:center;justify-content:space-between;padding:7px 11px;background:var(--card2);border-radius:var(--rs);margin-bottom:5px}
+.stdl{font-size:12px;font-weight:600}
+.stdv{font-family:var(--mono);font-size:12px;color:var(--blue)}
 
-/* PIN overlay */
-.pin-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
-.pin-box{background:var(--card);border:1px solid var(--border2);border-radius:var(--radius);padding:28px 24px;width:280px;text-align:center}
-.pin-title{font-size:16px;font-weight:700;margin-bottom:6px}
-.pin-sub{font-size:12px;color:var(--text3);margin-bottom:18px}
-.pin-input{width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text);padding:12px;font-size:24px;font-family:var(--mono);text-align:center;letter-spacing:8px;outline:none;margin-bottom:12px}
-.pin-input:focus{border-color:var(--blue)}
-.pin-error{font-size:12px;color:var(--red);margin-bottom:10px;min-height:16px}
-.pin-btn{width:100%;padding:11px;background:linear-gradient(135deg,var(--blue),var(--purple));border:none;border-radius:var(--radius-sm);color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font);margin-bottom:8px}
-.pin-cancel{width:100%;padding:9px;background:none;border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text3);font-size:13px;cursor:pointer;font-family:var(--font)}
+/* Overlay */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:200;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.ob{background:var(--card);border:1px solid var(--border2);border-radius:var(--r);padding:26px 22px;width:300px}
+.ot{font-size:16px;font-weight:800;margin-bottom:6px;text-align:center}
+.os{font-size:12px;color:var(--text3);margin-bottom:18px;text-align:center}
+.ho{width:100%;padding:12px 14px;border-radius:var(--rs);border:1.5px solid var(--border);background:var(--card2);color:var(--text);font-size:13px;font-weight:600;font-family:var(--font);cursor:pointer;margin-bottom:7px;text-align:left;display:flex;align-items:center;gap:10px;transition:all .15s}
+.ho:active{border-color:var(--blue)}
+.hoc{font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:2px}
+.pi{width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:var(--rs);color:var(--text);padding:12px;font-size:22px;font-family:var(--mono);text-align:center;letter-spacing:8px;outline:none;margin-bottom:11px}
+.pi:focus{border-color:var(--blue)}
+.pe{font-size:12px;color:var(--red);margin-bottom:9px;min-height:16px;text-align:center}
+.pb{width:100%;padding:11px;background:linear-gradient(135deg,var(--blue),var(--purple));border:none;border-radius:var(--rs);color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font);margin-bottom:7px}
+.pc{width:100%;padding:9px;background:none;border:1px solid var(--border);border-radius:var(--rs);color:var(--text3);font-size:13px;cursor:pointer;font-family:var(--font)}
 
-/* Loader / Toast / Empty */
+/* Time picker */
+.tpd{width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:var(--rs);color:var(--text);padding:10px 11px;font-size:14px;font-family:var(--mono);cursor:pointer;text-align:left;display:block;transition:border-color .15s}
+.tpd.open{border-color:var(--blue)}
+.tpdd{position:fixed;z-index:500;background:var(--card);border:1.5px solid var(--border2);border-radius:var(--r);box-shadow:0 8px 32px rgba(0,0,0,.7);padding:13px;display:none;gap:6px;align-items:flex-start}
+.tpdd.vis{display:flex}
+.tpc{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:50px}
+.tpcl{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px}
+.tps{height:148px;overflow-y:auto;width:100%;border-radius:var(--rs);background:var(--card2);-webkit-overflow-scrolling:touch}
+.tps::-webkit-scrollbar{width:3px}
+.tps::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.tpi{padding:7px 0;text-align:center;font-family:var(--mono);font-size:14px;font-weight:500;color:var(--text2);cursor:pointer;border-radius:6px;transition:all .1s;user-select:none}
+.tpi:hover{background:rgba(79,142,247,.1);color:var(--text)}
+.tpi.sel{background:rgba(79,142,247,.2);color:var(--blue);font-weight:700}
+.tpdiv{font-size:18px;color:var(--text3);padding:0 2px;align-self:center;margin-top:20px}
+.tpok{margin-top:9px;width:100%;padding:8px;background:linear-gradient(135deg,var(--blue),var(--purple));border:none;border-radius:var(--rs);color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font)}
+
+/* Misc */
 .loader{display:flex;align-items:center;justify-content:center;padding:50px;flex-direction:column;gap:12px;color:var(--text3);font-size:13px}
 .spinner{width:26px;height:26px;border:2px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .65s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.toast{position:fixed;bottom:72px;left:50%;transform:translateX(-50%);padding:10px 18px;border-radius:10px;font-size:12px;font-weight:600;z-index:300;white-space:nowrap;animation:slideUp .2s ease;pointer-events:none}
+.toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);padding:10px 17px;border-radius:10px;font-size:12px;font-weight:600;z-index:999;white-space:nowrap;animation:sup .2s ease;pointer-events:none}
 .toast.ok{background:#063a25;color:#4ade80;border:1px solid var(--green)}
 .toast.err{background:#3a0614;color:#f87171;border:1px solid var(--red)}
-@keyframes slideUp{from{opacity:0;transform:translateX(-50%) translateY(8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+@keyframes sup{from{opacity:0;transform:translateX(-50%) translateY(8px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 .empty{text-align:center;padding:40px 20px;color:var(--text3);font-size:13px}
-.empty-icon{font-size:32px;margin-bottom:8px}
+.ei{font-size:32px;margin-bottom:8px}
 input[type=number]{-moz-appearance:textfield}
 input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
-
-/* Time Picker */
-.time-picker-display{width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text);padding:10px 12px;font-size:14px;font-family:var(--mono);outline:none;cursor:pointer;text-align:left;transition:border-color .15s;display:block}
-.time-picker-display.open{border-color:var(--blue)}
-.time-picker-dropdown{position:fixed;z-index:500;background:var(--card);border:1.5px solid var(--border2);border-radius:var(--radius);box-shadow:0 8px 32px rgba(0,0,0,.7);padding:14px;display:none;gap:6px;align-items:flex-start}
-.time-picker-dropdown.visible{display:flex}
-.tp-col{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:52px}
-.tp-col-label{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px}
-.tp-scroll{height:150px;overflow-y:auto;width:100%;border-radius:var(--radius-sm);background:var(--card2);-webkit-overflow-scrolling:touch}
-.tp-scroll::-webkit-scrollbar{width:3px}
-.tp-scroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
-.tp-item{padding:7px 0;text-align:center;font-family:var(--mono);font-size:14px;font-weight:500;color:var(--text2);cursor:pointer;border-radius:6px;transition:all .1s;user-select:none}
-.tp-item:hover{background:rgba(79,142,247,.1);color:var(--text)}
-.tp-item.selected{background:rgba(79,142,247,.2);color:var(--blue);font-weight:700}
-.tp-divider{font-size:18px;color:var(--text3);padding:0 2px;align-self:center;margin-top:20px}
-.tp-done{margin-top:10px;width:100%;padding:8px;background:linear-gradient(135deg,var(--blue),var(--purple));border:none;border-radius:var(--radius-sm);color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font)}
+.drill-back{display:flex;align-items:center;gap:8px;margin-bottom:12px;color:var(--text2);font-size:13px;font-weight:600;cursor:pointer;background:none;border:none;font-family:var(--font);padding:0}
 </style>
 </head>
 <body>
 <div id="app">
   <div class="topbar">
     <div class="topbar-left">
-      <div class="topbar-icon">🛏</div>
+      <button class="hotel-badge" id="hotelBadge" onclick="showHotelSelector()">—</button>
       <div>
         <div class="topbar-title" id="appTitle">HK Tracker</div>
-        <div class="topbar-sub" id="headerSub">Loading...</div>
+        <div class="topbar-sub" id="headerSub">Select a hotel</div>
       </div>
     </div>
     <div class="topbar-right">
@@ -217,7 +219,7 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
       <button class="lang-btn" id="btnES" onclick="setLang('es')">ES</button>
     </div>
   </div>
-  <div class="tabs-bar" id="tabsBar">
+  <div class="tabs-bar">
     <button class="tab-btn active" onclick="switchTab('log')" id="tabLog">📋 Log</button>
     <button class="tab-btn" onclick="switchTab('entry')" id="tabEntry">➕ Entry</button>
     <button class="tab-btn" onclick="switchTab('analytics')" id="tabAnalytics">📊 Stats</button>
@@ -225,753 +227,781 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
   </div>
   <div class="content" id="content"></div>
 </div>
-
 <script>
-// ── Config ───────────────────────────────────────────────────────────────────
-const SB_URL = 'https://prhsllifpfacvdlttyuf.supabase.co';
-const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InByaHNsbGlmcGZhY3ZkbHR0eXVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4MTIxMTEsImV4cCI6MjA5MjM4ODExMX0._L65_b255yRPZ5d1A0i4rtcLO8NxmnokAwQ4grCMytk';
-const MANAGER_PIN = '2011';
+// ── Config ────────────────────────────────────────────────────────────────────
+const SB='https://prhsllifpfacvdlttyuf.supabase.co';
+const SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InByaHNsbGlmcGZhY3ZkbHR0eXVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4MTIxMTEsImV4cCI6MjA5MjM4ODExMX0._L65_b255yRPZ5d1A0i4rtcLO8NxmnokAwQ4grCMytk';
+const OWNER_PIN='3737';
 
-// ── Time standards (minutes) - hardcoded ─────────────────────────────────────
-const STD = {
-  k1kn_cosolc:30, k1kn_so:15,
-  k2qn_cosolc:40, k2qn_so:15,
-  o1kn_cosolc:45, o1kn_so:20,
-  bad_rooms:50,   deep_cleans:60,
-  overhead:50
+const HOTELS={
+  WKFCW:{name:'Candlewood Suites Wake Forest',short:'Candlewood',pin:'2011',color:'#4f8ef7',
+    rooms:[
+      {k:'k1kn_cosolc',l:'K1KN CO/SOLC',le:'K1KN CO/SOLC',m:30},
+      {k:'k1kn_so',l:'K1KN SO',le:'K1KN SO',m:15},
+      {k:'k2qn_cosolc',l:'K2QN CO/SOLC',le:'K2QN CO/SOLC',m:40},
+      {k:'k2qn_so',l:'K2QN SO',le:'K2QN SO',m:15},
+      {k:'o1kn_cosolc',l:'O1KN CO/SOLC',le:'O1KN CO/SOLC',m:45},
+      {k:'o1kn_so',l:'O1KN SO',le:'O1KN SO',m:20},
+      {k:'bad_rooms',l:'Bad Rooms',le:'Hab. Malas',m:50},
+      {k:'deep_cleans',l:'Deep Cleans',le:'Lim. Profunda',m:60},
+    ],oh:50},
+  RDURM:{name:'Tru by Hilton Wake Forest',short:'Tru WF',pin:'2023',color:'#2ecc8a',
+    rooms:[
+      {k:'k1kn_cosolc',l:'King CO/SOLC',le:'King CO/SOLC',m:25},
+      {k:'k1kn_so',l:'King SO',le:'King SO',m:12},
+      {k:'k2qn_cosolc',l:'Queen CO/SOLC',le:'Queen CO/SOLC',m:30},
+      {k:'k2qn_so',l:'Queen SO',le:'Queen SO',m:15},
+      {k:'bad_rooms',l:'Bad Rooms',le:'Hab. Malas',m:50},
+      {k:'deep_cleans',l:'Deep Cleans',le:'Lim. Profunda',m:60},
+    ],oh:50},
+  RDUTT:{name:'Home2 Suites Raleigh North',short:'Home2 RAL',pin:'2021',color:'#ffb03a',
+    rooms:[
+      {k:'k1kn_cosolc',l:'King Studio CO/SOLC',le:'King Studio CO/SOLC',m:30},
+      {k:'k1kn_so',l:'King Studio SO',le:'King Studio SO',m:15},
+      {k:'k2qn_cosolc',l:'King 1BR CO/SOLC',le:'King 1BR CO/SOLC',m:40},
+      {k:'k2qn_so',l:'King 1BR SO',le:'King 1BR SO',m:20},
+      {k:'o1kn_cosolc',l:'Queen Studio CO/SOLC',le:'Queen Studio CO/SOLC',m:30},
+      {k:'o1kn_so',l:'Queen Studio SO',le:'Queen Studio SO',m:15},
+      {k:'bad_rooms',l:'Queen 1BR CO/SOLC',le:'Queen 1BR CO/SOLC',m:40},
+      {k:'deep_cleans',l:'Queen 1BR SO',le:'Queen 1BR SO',m:20},
+    ],oh:50},
 };
+const HCODES=['WKFCW','RDURM','RDUTT'];
 
-// ── Translations ─────────────────────────────────────────────────────────────
-const T = {
-  en: {
-    appTitle:'HK Tracker', loading:'Loading...', syncing:'Syncing...',
-    entries:'entries', staff:'staff',
-    tabLog:'📋 Log', tabEntry:'➕ Entry', tabStats:'📊 Stats', tabSettings:'⚙️',
-    // Log
-    allStaff:'All Staff', clearFilter:'✕ Clear', noEntries:'No entries found',
-    edit:'✏️ Edit', del:'🗑 Delete',
-    expMin:'Exp Min', actMin:'Act Min', bad:'Bad', deep:'Deep',
-    clockIn:'Clock In', expectedOut:'Expected Out', actualOut:'Actual Out',
-    // Daily totals
-    dailyTotals:'Daily Totals', arrivals:'Arrivals', cosolc:'CO/SOLC',
-    stayover:'Stayover', teamNeeded:'Team Needed', editDay:'Edit',
-    // Entry
-    newEntry:'New Entry', editEntry:'Edit Entry', saveEntry:'Save Entry',
-    saveChanges:'Save Changes', cancel:'Cancel',
-    date:'Date', housekeeper:'Housekeeper', selectHK:'— Select —',
-    clockInHB:'Clock In (Homebase)', clockOutHB:'Clock Out (Homebase)',
-    roomCounts:'Room Counts',
-    k1knCosolc:'K1KN CO/SOLC', k1knSo:'K1KN SO',
-    k2qnCosolc:'K2QN CO/SOLC', k2qnSo:'K2QN SO',
-    o1knCosolc:'O1KN CO/SOLC', o1knSo:'O1KN SO',
-    badRooms:'Bad Rooms', deepCleans:'Deep Cleans',
-    rating:'Performance Rating', sat:'Satisfactory', unsat:'Unsatisfactory', train:'Needs Training',
-    variancePreview:'Variance Preview', expEnd:'Expected Out', variance:'Variance',
-    dateRequired:'Date and housekeeper required', clockOutRequired:'Clock-out time required',
-    entrySaved:'Entry saved ✓', entryUpdated:'Entry updated ✓', entryDeleted:'Deleted',
-    confirmDelete:'Delete this entry?',
-    // Daily totals form
-    dailyHeader:'Daily Totals (Head Housekeeper)', saveTotals:'Save Totals', totalsSaved:'Daily totals saved ✓',
-    // Analytics
-    today:'Today', last7:'Last 7d', thisMonth:'This Month', allTime:'All Time',
-    shifts:'Shifts', rooms:'Rooms', avgVariance:'Avg Variance',
-    staffPerformance:'Staff Performance', avgRooms:'Avg Rooms',
-    onTime:'on time', over:'over', early:'early',
-    noData:'No data for this period',
-    exportDay:'⬇ Export Day to CSV', exportAll:'⬇ Export All to CSV',
-    // Settings
-    pinRequired:'Manager PIN Required', pinEnter:'Enter your 4-digit PIN to access settings.',
-    pinPlaceholder:'••••', pinUnlock:'Unlock', pinCancel:'Cancel', pinWrong:'Incorrect PIN',
-    staffList:'Staff List', addStaff:'Add Staff', addName:'Staff name...', add:'+ Add',
-    noStaff:'No staff added yet', removeStaff:'Remove',
-    staffAdded:' added ✓', staffRemoved:' removed', alreadyExists:'Already exists',
-    confirmRemove:'Remove {name}?\nThis won\'t delete their entries.',
-    timeStandards:'Time Standards (minutes, read-only)',
-    overhead:'Overhead (carts + break)',
+// ── Translations ──────────────────────────────────────────────────────────────
+const T={
+  en:{sel:'Select Hotel',selSub:'Choose a property to continue',
+    tLog:'📋 Log',tEnt:'➕ Entry',tStat:'📊 Stats',tSet:'⚙️',
+    allStaff:'All Staff',noEnt:'No entries found',edit:'✏️ Edit',del:'🗑 Delete',
+    expMin:'Exp Min',actMin:'Act Min',cIn:'Clock In',expOut:'Expected Out',actOut:'Actual Out',
+    dtTitle:'Daily Totals',arr:'Arrivals',cos:'CO/SOLC',sto:'Stayover',tm:'Team Needed',editDay:'Edit',
+    newE:'New Entry',editE:'Edit Entry',saveE:'Save Entry',saveC:'Save Changes',cancel:'Cancel',
+    date:'Date',hk:'Housekeeper',selHK:'— Select —',
+    cInHB:'Clock In (Homebase)',cOutHB:'Clock Out (Homebase)',
+    rooms:'Room Counts',bad:'Bad Rooms',deep:'Deep Cleans',
+    rating:'Performance Rating',sat:'Satisfactory',uns:'Unsatisfactory',trn:'Needs Training',
+    expE:'Expected Out',var:'Variance',
+    dateReq:'Date and housekeeper required',coReq:'Clock-out time required',
+    saved:'Entry saved ✓',updated:'Entry updated ✓',deleted:'Deleted',
+    confDel:'Delete this entry?',confEdit:'Edit requires manager PIN',
+    dtSave:'Save Totals',dtSaved:'Totals saved ✓',
+    tod:'Today',l7:'Last 7d',mon:'This Month',all:'All Time',
+    shifts:'Shifts',rms:'Rooms',avgV:'Avg Variance',
+    perfTitle:'Staff Performance',avgR:'Avg Rooms',
+    onT:'on time',ov:'over',ear:'early',noData:'No data for this period',
+    expDay:'⬇ Export Day CSV',expAll:'⬇ Export All CSV',
+    pinReq:'PIN Required',pinSub:'Enter manager PIN to continue.',
+    unlock:'Unlock',pcancel:'Cancel',wrong:'Incorrect PIN',
+    staffList:'Staff List',addN:'Staff name...',add:'+ Add',
+    noStaff:'No staff added yet',rem:'Remove',
+    added:' added ✓',removed:' removed',exists:'Already exists',
+    confRem:'Remove {n}?\nThis won\'t delete their entries.',
+    timeStd:'Time Standards (read-only)',oh:'Overhead (carts + break)',
+    swHotel:'Switch Hotel',lockSet:'🔒 Lock Settings',
+    loading:'Loading...',sync:'Syncing...',ents:'entries',stf:'staff',
+    ownerView:'Owner View — All Properties',
+    portfolio:'Portfolio Overview',comparison:'Hotel Comparison',drill:'Staff Detail',
+    backTo:'← Back',viewStaff:'View Staff →',
   },
-  es: {
-    appTitle:'HK Tracker', loading:'Cargando...', syncing:'Sincronizando...',
-    entries:'registros', staff:'personal',
-    tabLog:'📋 Registro', tabEntry:'➕ Entrada', tabStats:'📊 Stats', tabSettings:'⚙️',
-    allStaff:'Todo el Personal', clearFilter:'✕ Limpiar', noEntries:'No se encontraron registros',
-    edit:'✏️ Editar', del:'🗑 Eliminar',
-    expMin:'Min Esp', actMin:'Min Real', bad:'Mal', deep:'Profunda',
-    clockIn:'Entrada', expectedOut:'Salida Esperada', actualOut:'Salida Real',
-    dailyTotals:'Totales del Día', arrivals:'Llegadas', cosolc:'CO/SOLC',
-    stayover:'Estancia', teamNeeded:'Personal Necesario', editDay:'Editar',
-    newEntry:'Nueva Entrada', editEntry:'Editar Entrada', saveEntry:'Guardar Entrada',
-    saveChanges:'Guardar Cambios', cancel:'Cancelar',
-    date:'Fecha', housekeeper:'Camarera', selectHK:'— Seleccionar —',
-    clockInHB:'Hora Entrada (Homebase)', clockOutHB:'Hora Salida (Homebase)',
-    roomCounts:'Conteo de Habitaciones',
-    k1knCosolc:'K1KN CO/SOLC', k1knSo:'K1KN SO',
-    k2qnCosolc:'K2QN CO/SOLC', k2qnSo:'K2QN SO',
-    o1knCosolc:'O1KN CO/SOLC', o1knSo:'O1KN SO',
-    badRooms:'Hab. Problemáticas', deepCleans:'Limpieza Profunda',
-    rating:'Calificación de Desempeño', sat:'Satisfactorio', unsat:'Insatisfactorio', train:'Necesita Capacitación',
-    variancePreview:'Vista Previa de Varianza', expEnd:'Salida Esperada', variance:'Varianza',
-    dateRequired:'Fecha y camarera requeridas', clockOutRequired:'Hora de salida requerida',
-    entrySaved:'Entrada guardada ✓', entryUpdated:'Entrada actualizada ✓', entryDeleted:'Eliminado',
-    confirmDelete:'¿Eliminar esta entrada?',
-    dailyHeader:'Totales del Día (Ama de Llaves)', saveTotals:'Guardar Totales', totalsSaved:'Totales guardados ✓',
-    today:'Hoy', last7:'Últimos 7d', thisMonth:'Este Mes', allTime:'Todo',
-    shifts:'Turnos', rooms:'Habitaciones', avgVariance:'Varianza Prom',
-    staffPerformance:'Desempeño del Personal', avgRooms:'Hab. Promedio',
-    onTime:'a tiempo', over:'excedido', early:'anticipado',
-    noData:'Sin datos para este período',
-    exportDay:'⬇ Exportar Día a CSV', exportAll:'⬇ Exportar Todo a CSV',
-    pinRequired:'PIN de Gerente Requerido', pinEnter:'Ingrese su PIN de 4 dígitos para acceder.',
-    pinPlaceholder:'••••', pinUnlock:'Desbloquear', pinCancel:'Cancelar', pinWrong:'PIN incorrecto',
-    staffList:'Lista de Personal', addStaff:'Agregar Personal', addName:'Nombre...', add:'+ Agregar',
-    noStaff:'No hay personal agregado', removeStaff:'Quitar',
-    staffAdded:' agregado ✓', staffRemoved:' eliminado', alreadyExists:'Ya existe',
-    confirmRemove:'¿Quitar a {name}?\nEsto no eliminará sus registros.',
-    timeStandards:'Estándares de Tiempo (minutos, solo lectura)',
-    overhead:'Tiempo Fijo (carros + descanso)',
+  es:{sel:'Seleccionar Hotel',selSub:'Elige una propiedad para continuar',
+    tLog:'📋 Registro',tEnt:'➕ Entrada',tStat:'📊 Stats',tSet:'⚙️',
+    allStaff:'Todo el Personal',noEnt:'No se encontraron registros',edit:'✏️ Editar',del:'🗑 Eliminar',
+    expMin:'Min Esp',actMin:'Min Real',cIn:'Entrada',expOut:'Salida Esperada',actOut:'Salida Real',
+    dtTitle:'Totales del Día',arr:'Llegadas',cos:'CO/SOLC',sto:'Estancia',tm:'Personal',editDay:'Editar',
+    newE:'Nueva Entrada',editE:'Editar Entrada',saveE:'Guardar',saveC:'Guardar Cambios',cancel:'Cancelar',
+    date:'Fecha',hk:'Camarera',selHK:'— Seleccionar —',
+    cInHB:'Entrada (Homebase)',cOutHB:'Salida (Homebase)',
+    rooms:'Habitaciones',bad:'Hab. Malas',deep:'Lim. Profunda',
+    rating:'Calificación',sat:'Satisfactorio',uns:'Insatisfactorio',trn:'Necesita Capacitación',
+    expE:'Salida Esperada',var:'Varianza',
+    dateReq:'Fecha y camarera requeridas',coReq:'Hora de salida requerida',
+    saved:'Entrada guardada ✓',updated:'Entrada actualizada ✓',deleted:'Eliminado',
+    confDel:'¿Eliminar esta entrada?',confEdit:'Se requiere PIN del gerente',
+    dtSave:'Guardar',dtSaved:'Totales guardados ✓',
+    tod:'Hoy',l7:'Últimos 7d',mon:'Este Mes',all:'Todo',
+    shifts:'Turnos',rms:'Habitaciones',avgV:'Varianza Prom',
+    perfTitle:'Desempeño del Personal',avgR:'Hab. Promedio',
+    onT:'a tiempo',ov:'excedido',ear:'anticipado',noData:'Sin datos para este período',
+    expDay:'⬇ Exportar Día CSV',expAll:'⬇ Exportar Todo CSV',
+    pinReq:'PIN Requerido',pinSub:'Ingrese el PIN del gerente.',
+    unlock:'Desbloquear',pcancel:'Cancelar',wrong:'PIN incorrecto',
+    staffList:'Lista de Personal',addN:'Nombre...',add:'+ Agregar',
+    noStaff:'No hay personal',rem:'Quitar',
+    added:' agregado ✓',removed:' eliminado',exists:'Ya existe',
+    confRem:'¿Quitar a {n}?',
+    timeStd:'Estándares de Tiempo (solo lectura)',oh:'Tiempo Fijo',
+    swHotel:'Cambiar Hotel',lockSet:'🔒 Cerrar Configuración',
+    loading:'Cargando...',sync:'Sincronizando...',ents:'registros',stf:'personal',
+    ownerView:'Vista Propietario — Todas las Propiedades',
+    portfolio:'Resumen General',comparison:'Comparación de Hoteles',drill:'Detalle de Personal',
+    backTo:'← Atrás',viewStaff:'Ver Personal →',
   }
 };
 
-// ── State ────────────────────────────────────────────────────────────────────
-let lang = 'en';
-let currentTab = 'log';
-let records = [];
-let staffList = [];
-let dailyTotalsMap = {};
-let loading = false;
-let editingId = null;
-let filterDate = '';
-let filterName = 'All';
-let analyticsRange = 'week';
-let newStaffName = '';
-let settingsUnlocked = false;
-let toastTimer = null;
-let form = emptyForm();
+// ── State ─────────────────────────────────────────────────────────────────────
+let lang='en',tab='log',hotel=null,isOwner=false;
+let recs=[],staff=[],dtMap={};
+let loading=false,editId=null,fDate='',fName='All';
+let aRange='week',oDrill=null;
+let newName='',setUnlocked=false,toastT=null;
+let form=ef();
+let tpField=null,tpBtn=null,tpH=8,tpM=30,tpAP='AM';
+let pendingAction=null; // for PIN-gated edit/delete
 
-function t(k){ return (T[lang][k]) || k; }
+function t(k){return T[lang][k]||k;}
+function h(){return HOTELS[hotel];}
+function ef(){return{date:'',name:'',k1kn_cosolc:0,k1kn_so:0,k2qn_cosolc:0,k2qn_so:0,o1kn_cosolc:0,o1kn_so:0,bad_rooms:0,deep_cleans:0,clock_in:'8:30 AM',clock_out:'',rating:''};}
 
-function emptyForm(){
-  return { date:'', name:'', k1kn_cosolc:0, k1kn_so:0, k2qn_cosolc:0, k2qn_so:0,
-    o1kn_cosolc:0, o1kn_so:0, bad_rooms:0, deep_cleans:0, clock_in:'8:30 AM', clock_out:'', rating:'' };
-}
-
-// ── Supabase ─────────────────────────────────────────────────────────────────
-async function sb(path, opts={}){
-  const url = path.startsWith('http') ? path : `${SB_URL}/rest/v1/${path}`;
-  const res = await fetch(url, { ...opts, headers: {
-    'apikey':SB_KEY, 'Authorization':`Bearer ${SB_KEY}`,
-    'Content-Type':'application/json', 'Prefer':opts.prefer||'',
-    ...(opts.headers||{})
-  }});
-  if(!res.ok){ const e=await res.text(); throw new Error(e); }
-  if(res.status===204) return null;
+// ── Supabase ──────────────────────────────────────────────────────────────────
+async function api(path,opts={}){
+  const url=path.startsWith('http')?path:`${SB}/rest/v1/${path}`;
+  const res=await fetch(url,{...opts,headers:{'apikey':SK,'Authorization':`Bearer ${SK}`,'Content-Type':'application/json','Prefer':opts.prefer||'',...(opts.headers||{})}});
+  if(!res.ok){const e=await res.text();throw new Error(e);}
+  if(res.status===204)return null;
   return res.json();
 }
 
 async function loadAll(){
-  loading=true; render();
-  try {
-    const [recs, stf, tots] = await Promise.all([
-      sb('housekeeping?order=date.desc,name.asc&select=*'),
-      sb('staff?order=name.asc&select=*'),
-      sb('daily_totals?select=*')
+  if(!hotel)return;
+  loading=true;render();
+  try{
+    const code=hotel;
+    const allRecs = isOwner
+      ? await api('housekeeping?order=date.desc,name.asc&select=*')
+      : await api(`housekeeping?hotel_code=eq.${code}&order=date.desc,name.asc&select=*`);
+    const [stf,tots]=await Promise.all([
+      api(`staff?hotel_code=eq.${code}&order=name.asc&select=*`),
+      api(`daily_totals?hotel_code=eq.${code}&select=*`)
     ]);
-    records = recs||[];
-    staffList = (stf||[]).map(s=>s.name);
-    dailyTotalsMap = {};
-    (tots||[]).forEach(t=>{ dailyTotalsMap[t.date]=t; });
-  } catch(e){ showToast('Connection error',false); }
-  loading=false; render();
+    recs=allRecs||[];
+    staff=(stf||[]).map(s=>s.name);
+    dtMap={};(tots||[]).forEach(d=>{dtMap[d.date]=d;});
+  }catch(e){toast('Connection error',false);}
+  loading=false;render();
 }
 
-async function saveRecord(){
-  if(!form.date||!form.name) return showToast(t('dateRequired'),false);
-  if(!form.clock_out.trim()) return showToast(t('clockOutRequired'),false);
-  try {
-    if(editingId){
-      await sb(`housekeeping?id=eq.${editingId}`,{method:'PATCH',body:JSON.stringify(form)});
-      showToast(t('entryUpdated'));
-    } else {
-      await sb('housekeeping',{method:'POST',prefer:'return=minimal',body:JSON.stringify(form)});
-      showToast(t('entrySaved'));
+async function saveRec(){
+  if(!form.date||!form.name)return toast(t('dateReq'),false);
+  if(!form.clock_out.trim())return toast(t('coReq'),false);
+  try{
+    const p={...form,hotel_code:hotel};
+    if(editId){
+      await api(`housekeeping?id=eq.${editId}`,{method:'PATCH',body:JSON.stringify(p)});
+      toast(t('updated'));
+    }else{
+      await api('housekeeping',{method:'POST',prefer:'return=minimal',body:JSON.stringify(p)});
+      toast(t('saved'));
     }
-    editingId=null; form=emptyForm();
-    await loadAll(); switchTab('log');
-  } catch(e){ showToast('Save failed',false); }
+    editId=null;form=ef();await loadAll();switchTab('log');
+  }catch(e){toast('Save failed',false);}
 }
 
-async function deleteRecord(id){
-  if(!confirm(t('confirmDelete'))) return;
-  try {
-    await sb(`housekeeping?id=eq.${id}`,{method:'DELETE'});
-    showToast(t('entryDeleted')); await loadAll();
-  } catch(e){ showToast('Delete failed',false); }
+async function doDelete(id){
+  try{await api(`housekeeping?id=eq.${id}`,{method:'DELETE'});toast(t('deleted'));await loadAll();}
+  catch(e){toast('Delete failed',false);}
 }
 
-async function saveDailyTotals(dt){
-  const el = id=>document.getElementById(id);
-  const payload = {
-    date: dt,
-    arrivals: +el('dt_arrivals').value||0,
-    cosolc: +el('dt_cosolc').value||0,
-    stayover: +el('dt_stayover').value||0,
-    team_members: +el('dt_team').value||0
-  };
-  try {
-    await sb('daily_totals',{method:'POST',prefer:'resolution=merge-duplicates',body:JSON.stringify(payload)});
-    showToast(t('totalsSaved')); await loadAll();
-  } catch(e){ showToast('Save failed',false); }
+async function saveDT(date){
+  const g=id=>document.getElementById(id);
+  const p={date,hotel_code:hotel,arrivals:+g('dta').value||0,cosolc:+g('dtc').value||0,stayover:+g('dts').value||0,team_members:+g('dtt').value||0};
+  try{await api('daily_totals',{method:'POST',prefer:'resolution=merge-duplicates',body:JSON.stringify(p)});toast(t('dtSaved'));await loadAll();}
+  catch(e){toast('Save failed',false);}
 }
 
 async function addStaff(){
-  const name = newStaffName.trim();
-  if(!name) return;
-  if(staffList.includes(name)) return showToast(t('alreadyExists'),false);
-  try {
-    await sb('staff',{method:'POST',prefer:'return=minimal',body:JSON.stringify({name})});
-    staffList.push(name); staffList.sort();
-    newStaffName=''; showToast(name+t('staffAdded')); render();
-  } catch(e){ showToast('Failed',false); }
+  const n=newName.trim();
+  if(!n)return;
+  if(staff.includes(n))return toast(t('exists'),false);
+  try{
+    await api('staff',{method:'POST',prefer:'return=minimal',body:JSON.stringify({name:n,hotel_code:hotel})});
+    staff.push(n);staff.sort();newName='';toast(n+t('added'));render();
+  }catch(e){toast('Failed',false);}
 }
 
-async function removeStaff(name){
-  if(!confirm(t('confirmRemove').replace('{name}',name))) return;
-  try {
-    await sb(`staff?name=eq.${encodeURIComponent(name)}`,{method:'DELETE'});
-    staffList=staffList.filter(n=>n!==name);
-    showToast(name+t('staffRemoved')); render();
-  } catch(e){ showToast('Failed',false); }
+async function removeStaff(n){
+  if(!confirm(t('confRem').replace('{n}',n)))return;
+  try{
+    await api(`staff?name=eq.${encodeURIComponent(n)}&hotel_code=eq.${hotel}`,{method:'DELETE'});
+    staff=staff.filter(x=>x!==n);toast(n+t('removed'));render();
+  }catch(e){toast('Failed',false);}
 }
 
-// ── Time math ────────────────────────────────────────────────────────────────
-function toFrac(s){
-  if(!s) return null;
-  const m=s.match(/(\d+):(\d+)\s*(AM|PM)/i);
-  if(!m) return null;
-  let h=+m[1],mn=+m[2];
-  const ap=m[3].toUpperCase();
-  if(ap==='PM'&&h!==12)h+=12;
-  if(ap==='AM'&&h===12)h=0;
-  return h+mn/60;
+// ── Time math ─────────────────────────────────────────────────────────────────
+function toF(s){
+  if(!s)return null;
+  const m=s.match(/(\d+):(\d+)\s*(AM|PM)/i);if(!m)return null;
+  let hh=+m[1],mn=+m[2];const ap=m[3].toUpperCase();
+  if(ap==='PM'&&hh!==12)hh+=12;if(ap==='AM'&&hh===12)hh=0;
+  return hh+mn/60;
 }
-function toTime(f){
-  f=((f%24)+24)%24;
-  const h=Math.floor(f),m=Math.round((f-h)*60);
-  const hh=m===60?h+1:h, mm=m===60?0:m;
-  const s=hh>=12?'PM':'AM', dh=hh>12?hh-12:(hh===0?12:hh);
-  return `${dh}:${String(mm).padStart(2,'0')} ${s}`;
+function toT(f){
+  f=((f%24)+24)%24;const hh=Math.floor(f),mm=Math.round((f-hh)*60);
+  const H=mm===60?hh+1:hh,M=mm===60?0:mm;
+  const s=H>=12?'PM':'AM',dh=H>12?H-12:(H===0?12:H);
+  return`${dh}:${String(M).padStart(2,'0')} ${s}`;
 }
-function calcExpMin(r){
-  return (r.k1kn_cosolc||0)*STD.k1kn_cosolc+(r.k1kn_so||0)*STD.k1kn_so
-        +(r.k2qn_cosolc||0)*STD.k2qn_cosolc+(r.k2qn_so||0)*STD.k2qn_so
-        +(r.o1kn_cosolc||0)*STD.o1kn_cosolc+(r.o1kn_so||0)*STD.o1kn_so
-        +(r.bad_rooms||0)*STD.bad_rooms+(r.deep_cleans||0)*STD.deep_cleans+STD.overhead;
+function expMin(r,hcode){
+  const cfg=HOTELS[hcode||hotel];if(!cfg)return 0;
+  return cfg.rooms.reduce((s,rm)=>s+(r[rm.k]||0)*rm.m,0)+cfg.oh;
 }
-function calcVar(r){
-  const sf=toFrac(r.clock_in||r.start_time),cf=toFrac(r.clock_out);
-  if(sf===null||cf===null) return null;
-  const expMin=calcExpMin(r);
-  const actMin=Math.round((cf-sf)*60);
-  return {expMin, expEnd:toTime(sf+expMin/60), actMin, varMin:actMin-expMin};
+function calcV(r,hcode){
+  const sf=toF(r.clock_in),cf=toF(r.clock_out);if(sf===null||cf===null)return null;
+  const em=expMin(r,hcode),am=Math.round((cf-sf)*60);
+  return{em,ee:toT(sf+em/60),am,vm:am-em};
 }
-function totalRooms(r){
-  return (r.k1kn_cosolc||0)+(r.k1kn_so||0)+(r.k2qn_cosolc||0)+(r.k2qn_so||0)+(r.o1kn_cosolc||0)+(r.o1kn_so||0);
+function tRooms(r,hcode){
+  const cfg=HOTELS[hcode||hotel];if(!cfg)return 0;
+  return cfg.rooms.reduce((s,rm)=>s+(r[rm.k]||0),0);
 }
-function vcol(m){ return m>10?'var(--red)':m<-10?'var(--green)':'var(--amber)'; }
-function vlab(m){ if(m===null||m===undefined) return '—'; return (m>=0?'+':'')+m+' min'; }
-function fmtDate(d){ return new Date(d+'T00:00:00').toLocaleDateString(lang==='es'?'es-US':'en-US',{weekday:'short',month:'short',day:'numeric'}); }
+function vc(m){return m>10?'var(--red)':m<-10?'var(--green)':'var(--amber)';}
+function vl(m){if(m===null||m===undefined)return'—';return(m>=0?'+':'')+m+' min';}
+function bb(c){const mp={'var(--red)':'rgba(255,79,109,.15)','var(--green)':'rgba(46,204,138,.15)','var(--amber)':'rgba(255,176,58,.15)','var(--text3)':'rgba(90,90,122,.15)'};return mp[c]||'rgba(90,90,122,.15)';}
+function fd(d){return new Date(d+'T00:00:00').toLocaleDateString(lang==='es'?'es-US':'en-US',{weekday:'short',month:'short',day:'numeric'});}
+function rc(r){
+  if(r==='Satisfactory')return{bg:'rgba(46,204,138,.15)',c:'var(--green)'};
+  if(r==='Unsatisfactory')return{bg:'rgba(255,79,109,.15)',c:'var(--red)'};
+  if(r)return{bg:'rgba(255,176,58,.15)',c:'var(--amber)'};return null;
+}
+function rl(r){
+  if(!r)return'';
+  if(lang==='es'){if(r==='Satisfactory')return'Satisfactorio';if(r==='Unsatisfactory')return'Insatisfactorio';if(r==='Needs Training')return'Necesita Capacitación';}
+  return r;
+}
 
-// ── Language ─────────────────────────────────────────────────────────────────
+// ── Language ──────────────────────────────────────────────────────────────────
 function setLang(l){
   lang=l;
   document.getElementById('btnEN').classList.toggle('active',l==='en');
   document.getElementById('btnES').classList.toggle('active',l==='es');
-  document.getElementById('appTitle').textContent=t('appTitle');
-  updateTabLabels(); render();
+  updateTabs();render();
 }
-function updateTabLabels(){
-  document.getElementById('tabLog').textContent=t('tabLog');
-  document.getElementById('tabEntry').textContent=t('tabEntry');
-  document.getElementById('tabAnalytics').textContent=t('tabStats');
-  document.getElementById('tabSettings').textContent=t('tabSettings');
+function updateTabs(){
+  const keys=[['tabLog','tLog'],['tabEntry','tEnt'],['tabAnalytics','tStat'],['tabSettings','tSet']];
+  keys.forEach(([id,k])=>{const el=document.getElementById(id);if(el)el.textContent=t(k);});
 }
 
-// ── Tab ───────────────────────────────────────────────────────────────────────
-function switchTab(tab){
-  if(tab==='settings' && !settingsUnlocked){ showPinOverlay(); return; }
-  currentTab=tab;
-  document.querySelectorAll('.tab-btn').forEach((el,i)=>{
-    el.classList.toggle('active',['log','entry','analytics','settings'][i]===tab);
-  });
-  render();
+// ── Hotel selector ────────────────────────────────────────────────────────────
+function showHotelSelector(){
+  closeOv();
+  const o=document.createElement('div');o.className='ov';o.id='hotelOv';
+  o.innerHTML=`<div class="ob">
+    <div class="ot">🏨 ${t('sel')}</div>
+    <div class="os">${t('selSub')}</div>
+    ${HCODES.map(code=>{const hh=HOTELS[code];return`<button class="ho" onclick="pickHotel('${code}')" style="border-color:${hh.color}33">
+      <div style="width:10px;height:10px;border-radius:50%;background:${hh.color};flex-shrink:0"></div>
+      <div><div>${hh.short}</div><div class="hoc">${code}</div></div>
+    </button>`;}).join('')}
+    <button class="ho" onclick="pickOwner()" style="border-color:var(--purple)33;margin-top:5px">
+      <div style="width:10px;height:10px;border-radius:50%;background:var(--purple);flex-shrink:0"></div>
+      <div><div>Owner View</div><div class="hoc">All Properties · PIN ${OWNER_PIN.replace(/./g,'•')}</div></div>
+    </button>
+  </div>`;
+  document.body.appendChild(o);
+}
+
+function pickHotel(code){
+  closeOv();
+  showPin(HOTELS[code].pin,()=>{setHotel(code);},'hotel',code);
+}
+function pickOwner(){
+  closeOv();
+  showPin(OWNER_PIN,()=>{
+    hotel='WKFCW';isOwner=true;setUnlocked=false;oDrill=null;
+    updUI();loadAll();switchTab('analytics');
+  },'owner');
+}
+function setHotel(code){
+  hotel=code;isOwner=false;setUnlocked=false;fDate='';fName='All';form=ef();editId=null;oDrill=null;
+  localStorage.setItem('hk_last',code);
+  updUI();loadAll();
+  if(tab==='settings')switchTab('log');
+}
+function updUI(){
+  const badge=document.getElementById('hotelBadge');
+  const title=document.getElementById('appTitle');
+  if(isOwner){
+    badge.textContent='OWNER';badge.style.background='rgba(155,127,232,.2)';badge.style.color='var(--purple)';
+    title.textContent='HK Tracker';
+  }else if(hotel){
+    const hh=HOTELS[hotel];
+    badge.textContent=hotel;badge.style.background=hh.color+'22';badge.style.color=hh.color;
+    title.textContent=hh.short;
+  }
 }
 
 // ── PIN overlay ───────────────────────────────────────────────────────────────
-function showPinOverlay(){
-  const o=document.createElement('div');
-  o.className='pin-overlay'; o.id='pinOverlay';
-  o.innerHTML=`<div class="pin-box">
-    <div class="pin-title">${t('pinRequired')}</div>
-    <div class="pin-sub">${t('pinEnter')}</div>
-    <input class="pin-input" id="pinInput" type="password" maxlength="4" inputmode="numeric" placeholder="${t('pinPlaceholder')}"
-      onkeydown="if(event.key==='Enter')checkPin()"/>
-    <div class="pin-error" id="pinError"></div>
-    <button class="pin-btn" onclick="checkPin()">${t('pinUnlock')}</button>
-    <button class="pin-cancel" onclick="closePinOverlay()">${t('pinCancel')}</button>
+function showPin(expected,onOk,ctx,hcode){
+  closeOv();
+  const o=document.createElement('div');o.className='ov';o.id='pinOv';
+  const htl=hcode&&HOTELS[hcode]?HOTELS[hcode]:null;
+  const sub=ctx==='owner'?'Owner Access':ctx==='hotel'&&htl?htl.name:ctx==='edit'&&htl?htl.name:'';
+  o.innerHTML=`<div class="ob" style="width:280px;text-align:center">
+    <div class="ot">${t('pinReq')}</div>
+    <div class="os">${sub}<br>${t('pinSub')}</div>
+    <input class="pi" id="pinI" type="password" maxlength="4" inputmode="numeric"
+      onkeydown="if(event.key==='Enter')chkPin('${expected}')"/>
+    <div class="pe" id="pinE"></div>
+    <button class="pb" onclick="chkPin('${expected}')">${t('unlock')}</button>
+    <button class="pc" onclick="closeOv()">${t('pcancel')}</button>
   </div>`;
+  o._ok=onOk;
   document.body.appendChild(o);
-  setTimeout(()=>document.getElementById('pinInput')?.focus(),100);
+  setTimeout(()=>document.getElementById('pinI')?.focus(),100);
 }
-function checkPin(){
-  const val=document.getElementById('pinInput')?.value;
-  if(val===MANAGER_PIN){ settingsUnlocked=true; closePinOverlay(); currentTab='settings'; render(); }
-  else { const e=document.getElementById('pinError'); if(e) e.textContent=t('pinWrong'); }
+function chkPin(exp){
+  const v=document.getElementById('pinI')?.value;
+  if(v===exp){const o=document.getElementById('pinOv');const cb=o?o._ok:null;closeOv();if(cb)cb();}
+  else{const e=document.getElementById('pinE');if(e)e.textContent=t('wrong');}
 }
-function closePinOverlay(){ document.getElementById('pinOverlay')?.remove(); }
+function closeOv(){['hotelOv','pinOv','dtOv'].forEach(id=>document.getElementById(id)?.remove());}
+
+// ── Edit / Delete with PIN gate ───────────────────────────────────────────────
+function reqEdit(id){
+  showPin(HOTELS[hotel].pin,()=>{
+    const r=recs.find(x=>x.id===id);if(!r)return;
+    editId=id;form={...r,clock_in:r.clock_in||'8:30 AM'};
+    switchTab('entry');
+  },'edit',hotel);
+}
+function reqDelete(id){
+  showPin(HOTELS[hotel].pin,()=>{
+    if(!confirm(t('confDel')))return;
+    doDelete(id);
+  },'edit',hotel);
+}
+
+// ── Tab ───────────────────────────────────────────────────────────────────────
+function switchTab(t2){
+  if(t2==='settings'&&!setUnlocked){
+    showPin(isOwner?OWNER_PIN:HOTELS[hotel]?.pin,()=>{setUnlocked=true;tab='settings';syncTabUI();render();},'edit',hotel);
+    return;
+  }
+  tab=t2;syncTabUI();render();
+}
+function syncTabUI(){
+  document.querySelectorAll('.tab-btn').forEach((el,i)=>el.classList.toggle('active',['log','entry','analytics','settings'][i]===tab));
+}
 
 // ── Toast ─────────────────────────────────────────────────────────────────────
-function showToast(msg,ok=true){
-  if(toastTimer) clearTimeout(toastTimer);
-  let el=document.getElementById('_toast');
-  if(!el){ el=document.createElement('div'); el.id='_toast'; document.body.appendChild(el); }
-  el.className=`toast ${ok?'ok':'err'}`; el.textContent=msg; el.style.display='block';
-  toastTimer=setTimeout(()=>{ el.style.display='none'; },2600);
-}
-
-// ── Helpers ──────────────────────────────────────────────────────────────────
-function ratingColor(r){
-  if(r==='Satisfactory'||r==='Satisfactorio') return {bg:'rgba(46,204,138,.15)',c:'var(--green)'};
-  if(r==='Unsatisfactory'||r==='Insatisfactorio') return {bg:'rgba(255,79,109,.15)',c:'var(--red)'};
-  if(r) return {bg:'rgba(255,176,58,.15)',c:'var(--amber)'};
-  return null;
-}
-function ratingLabel(r){
-  if(!r) return '';
-  if(lang==='es'){
-    if(r==='Satisfactory') return 'Satisfactorio';
-    if(r==='Unsatisfactory') return 'Insatisfactorio';
-    if(r==='Needs Training') return 'Necesita Capacitación';
-  }
-  return r;
-}
-function badgeBg(col){
-  const map={'var(--red)':'rgba(255,79,109,.15)','var(--green)':'rgba(46,204,138,.15)','var(--amber)':'rgba(255,176,58,.15)','var(--muted)':'rgba(90,90,122,.15)'};
-  return map[col]||'rgba(90,90,122,.15)';
-}
-
-// ── Export ───────────────────────────────────────────────────────────────────
-function exportCSV(rows, filename){
-  if(!rows.length) return showToast('No data to export',false);
-  const headers = ['Date','Name','K1KN CO/SOLC','K1KN SO','K2QN CO/SOLC','K2QN SO','O1KN CO/SOLC','O1KN SO','Bad Rooms','Deep Cleans','Clock In','Clock Out','Exp Min','Act Min','Variance Min','Rating'];
-  const lines = [headers.join(',')];
-  rows.forEach(r=>{
-    const v=calcVar(r);
-    lines.push([
-      r.date, r.name,
-      r.k1kn_cosolc||0, r.k1kn_so||0, r.k2qn_cosolc||0, r.k2qn_so||0,
-      r.o1kn_cosolc||0, r.o1kn_so||0, r.bad_rooms||0, r.deep_cleans||0,
-      r.clock_in||'', r.clock_out||'',
-      v?v.expMin:'', v?v.actMin:'', v?v.varMin:'',
-      r.rating||''
-    ].join(','));
-  });
-  const blob=new Blob([lines.join('\n')],{type:'text/csv'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-  a.download=filename; a.click();
-}
-
-function exportDay(){
-  const dateToExport = filterDate || new Date().toISOString().slice(0,10);
-  const rows = records.filter(r=>r.date===dateToExport);
-  exportCSV(rows, `hk-${dateToExport}.csv`);
-}
-
-function exportAll(){
-  exportCSV(records, `hk-all-${new Date().toISOString().slice(0,10)}.csv`);
+function toast(msg,ok=true){
+  if(toastT)clearTimeout(toastT);
+  let el=document.getElementById('_t');
+  if(!el){el=document.createElement('div');el.id='_t';document.body.appendChild(el);}
+  el.className=`toast ${ok?'ok':'err'}`;el.textContent=msg;el.style.display='block';
+  toastT=setTimeout(()=>{el.style.display='none';},2600);
 }
 
 // ── Render ────────────────────────────────────────────────────────────────────
 function render(){
+  if(!hotel){
+    document.getElementById('content').innerHTML=`<div class="empty"><div class="ei">🏨</div><div style="margin-bottom:12px">Select a hotel to get started</div><button class="btn btnp" style="max-width:200px;margin:0 auto" onclick="showHotelSelector()">Select Hotel</button></div>`;
+    document.getElementById('headerSub').textContent='No hotel selected';
+    return;
+  }
   const sub=document.getElementById('headerSub');
-  if(sub) sub.textContent = loading ? t('syncing') : `${records.length} ${t('entries')} · ${staffList.length} ${t('staff')}`;
-  const c=document.getElementById('content');
-  if(!c) return;
-  if(loading&&records.length===0){ c.innerHTML=`<div class="loader"><div class="spinner"></div>${t('loading')}</div>`; return; }
-  if(currentTab==='log') renderLog(c);
-  else if(currentTab==='entry') renderEntry(c);
-  else if(currentTab==='analytics') renderAnalytics(c);
-  else renderSettings(c);
+  if(sub)sub.textContent=loading?t('sync'):`${recs.filter(r=>r.hotel_code===hotel).length} ${t('ents')} · ${staff.length} ${t('stf')}`;
+  const c=document.getElementById('content');if(!c)return;
+  if(loading&&recs.length===0){c.innerHTML=`<div class="loader"><div class="spinner"></div>${t('loading')}</div>`;return;}
+  if(tab==='log')rLog(c);
+  else if(tab==='entry')rEntry(c);
+  else if(tab==='analytics')rAnalytics(c);
+  else rSettings(c);
 }
 
 // ── LOG ───────────────────────────────────────────────────────────────────────
-function renderLog(el){
-  const filtered=records.filter(r=>(!filterDate||r.date===filterDate)&&(filterName==='All'||r.name===filterName));
-  const displayDate = filterDate || new Date().toISOString().slice(0,10);
-  const dt = dailyTotalsMap[displayDate];
-
-  let html=`<div class="filter-row">
-    <input type="date" value="${filterDate}" onchange="filterDate=this.value;render()"/>
-    <select onchange="filterName=this.value;render()">
+function rLog(el){
+  const dd=fDate||new Date().toISOString().slice(0,10);
+  const filtered=recs.filter(r=>r.hotel_code===hotel&&(!fDate||r.date===fDate)&&(fName==='All'||r.name===fName));
+  const dt=dtMap[dd];const cfg=h();
+  let html=`<div class="fr">
+    <input type="date" value="${fDate}" onchange="fDate=this.value;render()"/>
+    <select onchange="fName=this.value;render()">
       <option value="All">${t('allStaff')}</option>
-      ${staffList.map(n=>`<option value="${n}" ${filterName===n?'selected':''}>${n}</option>`).join('')}
+      ${staff.map(n=>`<option value="${n}" ${fName===n?'selected':''}>${n}</option>`).join('')}
     </select>
-    ${filterDate||filterName!=='All'?`<button class="filter-clear" onclick="filterDate='';filterName='All';render()">${t('clearFilter')}</button>`:''}
-  </div>`;
-
-  // Daily totals banner
-  html+=`<div class="daily-banner">
-    <div class="daily-banner-title">
-      <span>${t('dailyTotals')} — ${fmtDate(displayDate)}</span>
-      <button onclick="showDailyTotalsForm('${displayDate}')" style="background:none;border:1px solid rgba(79,142,247,.4);border-radius:5px;color:var(--blue);padding:2px 8px;font-size:10px;cursor:pointer;font-family:var(--font);font-weight:600">${t('editDay')}</button>
-    </div>
-    <div class="daily-banner-grid">
-      <div class="daily-stat"><div class="daily-stat-val">${dt?dt.arrivals:'-'}</div><div class="daily-stat-lbl">${t('arrivals')}</div></div>
-      <div class="daily-stat"><div class="daily-stat-val">${dt?dt.cosolc:'-'}</div><div class="daily-stat-lbl">${t('cosolc')}</div></div>
-      <div class="daily-stat"><div class="daily-stat-val">${dt?dt.stayover:'-'}</div><div class="daily-stat-lbl">${t('stayover')}</div></div>
-      <div class="daily-stat"><div class="daily-stat-val">${dt?dt.team_members:'-'}</div><div class="daily-stat-lbl">${t('teamNeeded')}</div></div>
+    ${fDate||fName!=='All'?`<button class="fc" onclick="fDate='';fName='All';render()">✕</button>`:''}
+  </div>
+  <div class="db">
+    <div class="dbt"><span>${t('dtTitle')} — ${fd(dd)}</span>
+      <button onclick="showDTForm('${dd}')" style="background:none;border:1px solid rgba(79,142,247,.4);border-radius:5px;color:var(--blue);padding:2px 8px;font-size:10px;cursor:pointer;font-family:var(--font);font-weight:600">${t('editDay')}</button></div>
+    <div class="dbg">
+      <div class="ds"><div class="dsv">${dt?dt.arrivals:'-'}</div><div class="dsl">${t('arr')}</div></div>
+      <div class="ds"><div class="dsv">${dt?dt.cosolc:'-'}</div><div class="dsl">${t('cos')}</div></div>
+      <div class="ds"><div class="dsv">${dt?dt.stayover:'-'}</div><div class="dsl">${t('sto')}</div></div>
+      <div class="ds"><div class="dsv">${dt?dt.team_members:'-'}</div><div class="dsl">${t('tm')}</div></div>
     </div>
   </div>`;
-
-  if(!filtered.length){
-    html+=`<div class="empty"><div class="empty-icon">📭</div>${t('noEntries')}</div>`;
-  } else {
-    filtered.forEach(r=>{
-      const v=calcVar(r), rooms=totalRooms(r);
-      const col=v?vcol(v.varMin):'var(--text3)';
-      const rCol=ratingColor(r.rating);
-      html+=`<div class="log-card">
-        <div class="log-header">
-          <div><div class="log-name">${r.name}</div><div class="log-date">${fmtDate(r.date)}</div></div>
-          <span class="var-badge" style="color:${col};background:${badgeBg(col)}">${v?vlab(v.varMin):'—'}</span>
-        </div>
-        ${rCol?`<div class="rating-tag" style="background:${rCol.bg};color:${rCol.c}">${ratingLabel(r.rating)}</div>`:''}
-        <div class="stats-chips">
-          <div class="chip"><strong>${rooms}</strong>${t('rooms')}</div>
-          ${v?`<div class="chip"><strong>${v.expMin}</strong>${t('expMin')}</div><div class="chip"><strong>${v.actMin}</strong>${t('actMin')}</div>`:''}
-          ${r.bad_rooms>0?`<div class="chip" style="border:1px solid rgba(255,79,109,.3)"><strong style="color:var(--red)">${r.bad_rooms}</strong>${t('bad')}</div>`:''}
-          ${r.deep_cleans>0?`<div class="chip" style="border:1px solid rgba(155,127,232,.3)"><strong style="color:var(--purple)">${r.deep_cleans}</strong>${t('deep')}</div>`:''}
-        </div>
-        ${v?`<div class="time-row">
-          <div class="time-item"><span class="time-lbl">${t('clockIn')}</span><span class="time-val">${r.clock_in||'—'}</span></div>
-          <span class="arrow">→</span>
-          <div class="time-item"><span class="time-lbl">${t('expectedOut')}</span><span class="time-val" style="color:var(--blue)">${v.expEnd}</span></div>
-          <span class="arrow">→</span>
-          <div class="time-item"><span class="time-lbl">${t('actualOut')}</span><span class="time-val" style="color:${col}">${r.clock_out||'—'}</span></div>
-        </div>`:''}
-        <div class="rooms-row">
-          ${r.k1kn_cosolc?`<span class="room-tag">K1KN CO/SOLC <span>${r.k1kn_cosolc}</span></span>`:''}
-          ${r.k1kn_so?`<span class="room-tag">K1KN SO <span>${r.k1kn_so}</span></span>`:''}
-          ${r.k2qn_cosolc?`<span class="room-tag">K2QN CO/SOLC <span>${r.k2qn_cosolc}</span></span>`:''}
-          ${r.k2qn_so?`<span class="room-tag">K2QN SO <span>${r.k2qn_so}</span></span>`:''}
-          ${r.o1kn_cosolc?`<span class="room-tag">O1KN CO/SOLC <span>${r.o1kn_cosolc}</span></span>`:''}
-          ${r.o1kn_so?`<span class="room-tag">O1KN SO <span>${r.o1kn_so}</span></span>`:''}
-        </div>
-        <div class="card-actions">
-          <button class="act-btn" onclick="startEdit('${r.id}')">${t('edit')}</button>
-          <button class="act-btn" onclick="deleteRecord('${r.id}')">${t('del')}</button>
-        </div>
-      </div>`;
-    });
-  }
+  if(!filtered.length)html+=`<div class="empty"><div class="ei">📭</div>${t('noEnt')}</div>`;
+  else filtered.forEach(r=>{
+    const v=calcV(r,r.hotel_code),rooms=tRooms(r,r.hotel_code);
+    const col=v?vc(v.vm):'var(--text3)';const rCol=rc(r.rating);
+    html+=`<div class="lc">
+      <div class="lh">
+        <div><div class="ln">${r.name}</div><div class="ld">${fd(r.date)}</div></div>
+        <span class="vbadge" style="color:${col};background:${bb(col)}">${v?vl(v.vm):'—'}</span>
+      </div>
+      ${rCol?`<div class="rtag" style="background:${rCol.bg};color:${rCol.c}">${rl(r.rating)}</div>`:''}
+      <div class="chips">
+        <div class="chip"><strong>${rooms}</strong>${t('rms')}</div>
+        ${v?`<div class="chip"><strong>${v.em}</strong>${t('expMin')}</div><div class="chip"><strong>${v.am}</strong>${t('actMin')}</div>`:''}
+      </div>
+      ${v?`<div class="trow">
+        <div class="ti"><span class="tl">${t('cIn')}</span><span class="tv">${r.clock_in||'—'}</span></div>
+        <span class="arr">→</span>
+        <div class="ti"><span class="tl">${t('expOut')}</span><span class="tv" style="color:var(--blue)">${v.ee}</span></div>
+        <span class="arr">→</span>
+        <div class="ti"><span class="tl">${t('actOut')}</span><span class="tv" style="color:${col}">${r.clock_out||'—'}</span></div>
+      </div>`:''}
+      <div class="rms">${cfg.rooms.filter(rm=>r[rm.k]>0).map(rm=>`<span class="rt">${lang==='es'?rm.le:rm.l} <span>${r[rm.k]}</span></span>`).join('')}</div>
+      <div class="ca">
+        <button class="ab" onclick="reqEdit('${r.id}')">${t('edit')}</button>
+        <button class="ab" onclick="reqDelete('${r.id}')">${t('del')}</button>
+      </div>
+    </div>`;
+  });
   el.innerHTML=html;
 }
 
-function showDailyTotalsForm(date){
-  const dt=dailyTotalsMap[date]||{};
-  const o=document.createElement('div');
-  o.className='pin-overlay'; o.id='dtOverlay';
-  o.innerHTML=`<div class="pin-box" style="width:320px">
-    <div class="pin-title" style="margin-bottom:14px">${t('dailyHeader')}</div>
-    <div class="grid-2" style="gap:10px;margin-bottom:14px">
-      <div><label style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px">${t('arrivals')}</label>
-        <input id="dt_arrivals" type="number" min="0" value="${dt.arrivals||0}" class="field-input" style="text-align:center"/></div>
-      <div><label style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px">${t('cosolc')}</label>
-        <input id="dt_cosolc" type="number" min="0" value="${dt.cosolc||0}" class="field-input" style="text-align:center"/></div>
-      <div><label style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px">${t('stayover')}</label>
-        <input id="dt_stayover" type="number" min="0" value="${dt.stayover||0}" class="field-input" style="text-align:center"/></div>
-      <div><label style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px">${t('teamNeeded')}</label>
-        <input id="dt_team" type="number" min="0" value="${dt.team_members||0}" class="field-input" style="text-align:center"/></div>
+function showDTForm(date){
+  const dt=dtMap[date]||{};
+  const o=document.createElement('div');o.className='ov';o.id='dtOv';
+  o.innerHTML=`<div class="ob" style="width:310px">
+    <div class="ot" style="margin-bottom:13px">${t('dtTitle')}</div>
+    <div class="g2" style="gap:10px;margin-bottom:13px">
+      <div><label style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px">${t('arr')}</label>
+        <input id="dta" type="number" min="0" value="${dt.arrivals||0}" class="fi" style="text-align:center"/></div>
+      <div><label style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px">${t('cos')}</label>
+        <input id="dtc" type="number" min="0" value="${dt.cosolc||0}" class="fi" style="text-align:center"/></div>
+      <div><label style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px">${t('sto')}</label>
+        <input id="dts" type="number" min="0" value="${dt.stayover||0}" class="fi" style="text-align:center"/></div>
+      <div><label style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px">${t('tm')}</label>
+        <input id="dtt" type="number" min="0" value="${dt.team_members||0}" class="fi" style="text-align:center"/></div>
     </div>
-    <button class="pin-btn" onclick="saveDailyTotals('${date}');document.getElementById('dtOverlay').remove()">${t('saveTotals')}</button>
-    <button class="pin-cancel" onclick="document.getElementById('dtOverlay').remove()">${t('cancel')}</button>
+    <button class="pb" onclick="saveDT('${date}');closeOv()">${t('dtSave')}</button>
+    <button class="pc" onclick="closeOv()">${t('cancel')}</button>
   </div>`;
   document.body.appendChild(o);
 }
 
 // ── ENTRY ─────────────────────────────────────────────────────────────────────
-function renderEntry(el){
-  const expMin=calcExpMin(form);
-  const sf=toFrac(form.clock_in);
-  const expEnd=sf!==null?toTime(sf+expMin/60):'—';
-  const v=calcVar(form);
-  const col=v?vcol(v.varMin):'var(--text3)';
-
+function rEntry(el){
+  const cfg=h();
+  const em=expMin(form);const sf=toF(form.clock_in);
+  const ee=sf!==null?toT(sf+em/60):'—';
+  const v=calcV(form);const col=v?vc(v.vm):'var(--text3)';
   el.innerHTML=`<div class="card">
-    <div class="card-title">${editingId?t('editEntry'):t('newEntry')}</div>
-    <div class="grid-2">
-      <div class="field"><label class="field-label">${t('date')} *</label>
-        <input type="date" class="field-input" value="${form.date}" oninput="form.date=this.value"/></div>
-      <div class="field"><label class="field-label">${t('housekeeper')} *</label>
-        <select class="field-select" onchange="form.name=this.value">
-          <option value="">${t('selectHK')}</option>
-          ${staffList.map(n=>`<option value="${n}" ${form.name===n?'selected':''}>${n}</option>`).join('')}
+    <div class="card-title">${editId?t('editE'):t('newE')}</div>
+    <div class="g2">
+      <div class="field"><label class="fl">${t('date')} *</label>
+        <input type="date" class="fi" value="${form.date}" oninput="form.date=this.value"/></div>
+      <div class="field"><label class="fl">${t('hk')} *</label>
+        <select class="fs" onchange="form.name=this.value">
+          <option value="">${t('selHK')}</option>
+          ${staff.map(n=>`<option value="${n}" ${form.name===n?'selected':''}>${n}</option>`).join('')}
         </select></div>
     </div>
-    <div class="grid-2">
-      <div class="field"><label class="field-label">${t('clockInHB')}</label>
-        <button class="time-picker-display" id="ci_btn" onclick="openTimePicker('clock_in','ci_btn')">${form.clock_in||'Select...'}</button>
-      </div>
-      <div class="field"><label class="field-label">${t('clockOutHB')} *</label>
-        <button class="time-picker-display" id="co_btn" onclick="openTimePicker('clock_out','co_btn')">${form.clock_out||'Select...'}</button>
-      </div>
+    <div class="g2">
+      <div class="field"><label class="fl">${t('cInHB')}</label>
+        <button class="tpd" id="ci_b" onclick="openTP('clock_in','ci_b')">${form.clock_in||'Select...'}</button></div>
+      <div class="field"><label class="fl">${t('cOutHB')} *</label>
+        <button class="tpd" id="co_b" onclick="openTP('clock_out','co_b')">${form.clock_out||'Select...'}</button></div>
     </div>
-    <div class="var-preview">
-      <div class="var-item"><span class="var-lbl">${t('expMin')}</span><span class="var-val" id="vMin">${expMin}</span></div>
-      <div class="var-item"><span class="var-lbl">${t('expEnd')}</span><span class="var-val" id="vEnd" style="color:var(--blue)">${expEnd}</span></div>
-      <div class="var-item"><span class="var-lbl">${t('variance')}</span><span class="var-val" id="vVar" style="color:${col}">${v?vlab(v.varMin):'—'}</span></div>
+    <div class="vp">
+      <div class="vi"><span class="vl">${t('expMin')}</span><span class="vv" id="vMin">${em}</span></div>
+      <div class="vi"><span class="vl">${t('expE')}</span><span class="vv" id="vEnd" style="color:var(--blue)">${ee}</span></div>
+      <div class="vi"><span class="vl">${t('var')}</span><span class="vv" id="vVar" style="color:${col}">${v?vl(v.vm):'—'}</span></div>
     </div>
-    <div class="section-div">${t('roomCounts')}</div>
-    <div class="grid-4">
-      ${[['k1kn_cosolc',t('k1knCosolc')],['k1kn_so',t('k1knSo')],
-         ['k2qn_cosolc',t('k2qnCosolc')],['k2qn_so',t('k2qnSo')],
-         ['o1kn_cosolc',t('o1knCosolc')],['o1kn_so',t('o1knSo')],
-         ['bad_rooms',t('badRooms')],['deep_cleans',t('deepCleans')]
-        ].map(([k,l])=>`<div class="field"><label class="field-label">${l}</label>
-          <input type="number" class="field-input" style="text-align:center" value="${form[k]||0}" min="0"
-            oninput="form['${k}']=+this.value;updateVarPreview()"/></div>`).join('')}
+    <div class="sdiv">${t('rooms')}</div>
+    <div class="g4">
+      ${cfg.rooms.map(rm=>`<div class="field"><label class="fl">${lang==='es'?rm.le:rm.l}</label>
+        <input type="number" class="fi" style="text-align:center" value="${form[rm.k]||0}" min="0"
+          oninput="form['${rm.k}']=+this.value;uvp()"/></div>`).join('')}
     </div>
-    <div class="section-div">${t('rating')}</div>
-    <div class="rating-row">
-      <button class="rating-opt sat ${form.rating==='Satisfactory'?'selected':''}" onclick="setRating('Satisfactory')">${t('sat')}</button>
-      <button class="rating-opt unsat ${form.rating==='Unsatisfactory'?'selected':''}" onclick="setRating('Unsatisfactory')">${t('unsat')}</button>
-      <button class="rating-opt train ${form.rating==='Needs Training'?'selected':''}" onclick="setRating('Needs Training')">${t('train')}</button>
+    <div class="sdiv">${t('rating')}</div>
+    <div class="rrow">
+      <button class="ropt sat ${form.rating==='Satisfactory'?'sel':''}" onclick="setR('Satisfactory')">${t('sat')}</button>
+      <button class="ropt uns ${form.rating==='Unsatisfactory'?'sel':''}" onclick="setR('Unsatisfactory')">${t('uns')}</button>
+      <button class="ropt trn ${form.rating==='Needs Training'?'sel':''}" onclick="setR('Needs Training')">${t('trn')}</button>
     </div>
-    <div style="margin-top:18px">
-      <button class="btn btn-primary" onclick="saveRecord()">${editingId?t('saveChanges'):t('saveEntry')}</button>
-      <button class="btn btn-secondary" onclick="cancelEdit()">${t('cancel')}</button>
+    <div style="margin-top:16px">
+      <button class="btn btnp" onclick="saveRec()">${editId?t('saveC'):t('saveE')}</button>
+      <button class="btn btns" onclick="cancelEdit()">${t('cancel')}</button>
     </div>
   </div>`;
 }
-
-function setRating(r){
+function setR(r){
   form.rating=form.rating===r?'':r;
-  // re-render just the rating buttons
-  document.querySelectorAll('.rating-opt').forEach(b=>{
-    b.classList.remove('selected');
-    if((b.classList.contains('sat')&&r==='Satisfactory'&&form.rating===r)||
-       (b.classList.contains('unsat')&&r==='Unsatisfactory'&&form.rating===r)||
-       (b.classList.contains('train')&&r==='Needs Training'&&form.rating===r)) b.classList.add('selected');
+  document.querySelectorAll('.ropt').forEach(b=>{
+    const isSat=b.classList.contains('sat')&&r==='Satisfactory'&&form.rating===r;
+    const isUns=b.classList.contains('uns')&&r==='Unsatisfactory'&&form.rating===r;
+    const isTrn=b.classList.contains('trn')&&r==='Needs Training'&&form.rating===r;
+    b.classList.toggle('sel',isSat||isUns||isTrn);
   });
 }
-
-function updateVarPreview(){
-  const expMin=calcExpMin(form);
-  const sf=toFrac(form.clock_in);
-  const expEnd=sf!==null?toTime(sf+expMin/60):'—';
-  const v=calcVar(form);
-  const col=v?vcol(v.varMin):'var(--text3)';
-  const vMin=document.getElementById('vMin'),vEnd=document.getElementById('vEnd'),vVar=document.getElementById('vVar');
-  if(vMin) vMin.textContent=expMin;
-  if(vEnd) vEnd.textContent=expEnd;
-  if(vVar){ vVar.textContent=v?vlab(v.varMin):'—'; vVar.style.color=col; }
+function uvp(){
+  const em=expMin(form);const sf=toF(form.clock_in);
+  const ee=sf!==null?toT(sf+em/60):'—';
+  const v=calcV(form);const col=v?vc(v.vm):'var(--text3)';
+  const a=document.getElementById('vMin'),b=document.getElementById('vEnd'),c=document.getElementById('vVar');
+  if(a)a.textContent=em;if(b)b.textContent=ee;
+  if(c){c.textContent=v?vl(v.vm):'—';c.style.color=col;}
 }
+function cancelEdit(){editId=null;form=ef();switchTab('log');}
 
 // ── ANALYTICS ─────────────────────────────────────────────────────────────────
-function renderAnalytics(el){
+function rAnalytics(el){
+  if(isOwner){rOwner(el);return;}
   const today=new Date().toISOString().slice(0,10);
-  const rf=records.filter(r=>{
+  const base=recs.filter(r=>r.hotel_code===hotel);
+  const rf=base.filter(r=>{
     const diff=(new Date(today)-new Date(r.date+'T00:00:00'))/86400000;
-    if(analyticsRange==='day') return r.date===today;
-    if(analyticsRange==='week') return diff>=0&&diff<7;
-    if(analyticsRange==='month') return r.date.slice(0,7)===today.slice(0,7);
+    if(aRange==='day')return r.date===today;
+    if(aRange==='week')return diff>=0&&diff<7;
+    if(aRange==='month')return r.date.slice(0,7)===today.slice(0,7);
     return true;
   });
-  const withV=rf.map(r=>({...r,_v:calcVar(r)})).filter(r=>r._v);
-  const avgVar=withV.length?Math.round(withV.reduce((s,r)=>s+r._v.varMin,0)/withV.length):0;
+  const wv=rf.map(r=>({...r,_v:calcV(r,hotel)})).filter(r=>r._v);
+  const avgV=wv.length?Math.round(wv.reduce((s,r)=>s+r._v.vm,0)/wv.length):0;
   const names=[...new Set(rf.map(r=>r.name))].sort();
-
-  let html=`<div class="range-pills">
-    ${[['day',t('today')],['week',t('last7')],['month',t('thisMonth')],['all',t('allTime')]].map(([v,l])=>
-      `<button class="pill ${analyticsRange===v?'active':''}" onclick="analyticsRange='${v}';render()">${l}</button>`).join('')}
+  let html=`<div class="pills">
+    ${[['day',t('tod')],['week',t('l7')],['month',t('mon')],['all',t('all')]].map(([v,l])=>
+      `<button class="pill ${aRange===v?'active':''}" onclick="aRange='${v}';render()">${l}</button>`).join('')}
   </div>
-  <div class="summary-grid">
-    <div class="sum-card"><div class="sum-val">${rf.length}</div><div class="sum-lbl">${t('shifts')}</div></div>
-    <div class="sum-card"><div class="sum-val">${rf.reduce((s,r)=>s+totalRooms(r),0)}</div><div class="sum-lbl">${t('rooms')}</div></div>
-    <div class="sum-card"><div class="sum-val" style="color:${vcol(avgVar)}">${avgVar>0?'+':''}${avgVar}m</div><div class="sum-lbl">${t('avgVariance')}</div></div>
+  <div class="sg">
+    <div class="sc"><div class="sv">${rf.length}</div><div class="sl">${t('shifts')}</div></div>
+    <div class="sc"><div class="sv">${rf.reduce((s,r)=>s+tRooms(r,hotel),0)}</div><div class="sl">${t('rms')}</div></div>
+    <div class="sc"><div class="sv" style="color:${vc(avgV)}">${avgV>0?'+':''}${avgV}m</div><div class="sl">${t('avgV')}</div></div>
   </div>
-  <button class="export-btn" onclick="exportDay()">${t('exportDay')}</button>
-  <button class="export-btn" onclick="exportAll()" style="margin-bottom:14px">${t('exportAll')}</button>
-  <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">${t('staffPerformance')}</div>`;
+  <button class="ebtn" onclick="expDay()">${t('expDay')}</button>
+  <button class="ebtn" onclick="expAll()">${t('expAll')}</button>
+  <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">${t('perfTitle')}</div>`;
+  if(!names.length)html+=`<div class="empty"><div class="ei">📊</div>${t('noData')}</div>`;
+  else names.forEach(n=>html+=staffCard(n,rf,hotel));
+  el.innerHTML=html;
+}
 
-  if(!names.length){ html+=`<div class="empty"><div class="empty-icon">📊</div>${t('noData')}</div>`; }
-  else names.forEach(name=>{
-    const rows=rf.filter(r=>r.name===name);
-    const rowsV=rows.map(r=>({...r,_v:calcVar(r)})).filter(r=>r._v);
-    const avgRooms=(rows.reduce((s,r)=>s+totalRooms(r),0)/rows.length).toFixed(1);
-    const avgExpMin=rowsV.length?Math.round(rowsV.reduce((s,r)=>s+r._v.expMin,0)/rowsV.length):'-';
-    const avgVarMin=rowsV.length?Math.round(rowsV.reduce((s,r)=>s+r._v.varMin,0)/rowsV.length):null;
-    const col=avgVarMin!==null?vcol(avgVarMin):'var(--text3)';
-    const over=rowsV.filter(r=>r._v.varMin>10).length;
-    const under=rowsV.filter(r=>r._v.varMin<-10).length;
-    const ontime=rowsV.length-over-under;
-    // Rating breakdown
-    const satCount=rows.filter(r=>r.rating==='Satisfactory').length;
-    const unsatCount=rows.filter(r=>r.rating==='Unsatisfactory').length;
-    const trainCount=rows.filter(r=>r.rating==='Needs Training').length;
-    html+=`<div class="staff-analytics-card">
-      <div class="sa-header">
-        <div class="sa-name">${name}</div>
-        <span class="sa-shifts">${rows.length} shift${rows.length!==1?'s':''}</span>
+function staffCard(name,rows_all,hcode){
+  const rows=rows_all.filter(r=>r.name===name);
+  const rowsV=rows.map(r=>({...r,_v:calcV(r,hcode)})).filter(r=>r._v);
+  const avgR=(rows.reduce((s,r)=>s+tRooms(r,hcode),0)/rows.length).toFixed(1);
+  const avgE=rowsV.length?Math.round(rowsV.reduce((s,r)=>s+r._v.em,0)/rowsV.length):'-';
+  const avgVm=rowsV.length?Math.round(rowsV.reduce((s,r)=>s+r._v.vm,0)/rowsV.length):null;
+  const col=avgVm!==null?vc(avgVm):'var(--text3)';
+  const over=rowsV.filter(r=>r._v.vm>10).length;
+  const under=rowsV.filter(r=>r._v.vm<-10).length;
+  const ontime=rowsV.length-over-under;
+  const satC=rows.filter(r=>r.rating==='Satisfactory').length;
+  const unsC=rows.filter(r=>r.rating==='Unsatisfactory').length;
+  const trnC=rows.filter(r=>r.rating==='Needs Training').length;
+  return`<div class="sac">
+    <div class="sah"><div class="san">${name}</div><span style="font-size:10px;color:var(--text3);font-family:var(--mono)">${rows.length} shift${rows.length!==1?'s':''}</span></div>
+    <div class="sas">
+      <div><div class="sav">${avgR}</div><div class="sal">${t('avgR')}</div></div>
+      <div><div class="sav">${avgE}</div><div class="sal">${t('expMin')}</div></div>
+      <div><div class="sav" style="color:${col}">${avgVm!==null?(avgVm>0?'+':'')+avgVm+'m':'—'}</div><div class="sal">${t('avgV')}</div></div>
+    </div>
+    ${rowsV.length?`<div class="sbd">
+      <div class="sbi" style="background:rgba(46,204,138,.1);color:var(--green)">✓ ${ontime} ${t('onT')}</div>
+      <div class="sbi" style="background:rgba(255,79,109,.1);color:var(--red)">↑ ${over} ${t('ov')}</div>
+      <div class="sbi" style="background:rgba(79,142,247,.1);color:var(--blue)">↓ ${under} ${t('ear')}</div>
+    </div>`:''}
+    ${rows.length?`<div class="sbd">
+      <div class="sbi" style="background:rgba(46,204,138,.1);color:var(--green)">${satC} ${t('sat')}</div>
+      <div class="sbi" style="background:rgba(255,79,109,.1);color:var(--red)">${unsC} ${t('uns')}</div>
+      <div class="sbi" style="background:rgba(255,176,58,.1);color:var(--amber)">${trnC} ${t('trn')}</div>
+    </div>`:''}
+  </div>`;
+}
+
+// ── OWNER ANALYTICS ───────────────────────────────────────────────────────────
+function rOwner(el){
+  const today=new Date().toISOString().slice(0,10);
+  function filtered(hcode){
+    return recs.filter(r=>{
+      if(r.hotel_code!==hcode)return false;
+      const diff=(new Date(today)-new Date(r.date+'T00:00:00'))/86400000;
+      if(aRange==='day')return r.date===today;
+      if(aRange==='week')return diff>=0&&diff<7;
+      if(aRange==='month')return r.date.slice(0,7)===today.slice(0,7);
+      return true;
+    });
+  }
+
+  // If drilling into a hotel
+  if(oDrill){
+    const rf=filtered(oDrill);
+    const names=[...new Set(rf.map(r=>r.name))].sort();
+    const hh=HOTELS[oDrill];
+    let html=`<button class="drill-back" onclick="oDrill=null;render()">← ${t('backTo')} ${t('comparison')}</button>
+    <div style="font-size:13px;font-weight:700;margin-bottom:12px;color:${hh.color}">${hh.name}</div>
+    <div class="pills">
+      ${[['day',t('tod')],['week',t('l7')],['month',t('mon')],['all',t('all')]].map(([v,l])=>
+        `<button class="pill ${aRange===v?'active':''}" onclick="aRange='${v}';render()">${l}</button>`).join('')}
+    </div>`;
+    if(!names.length)html+=`<div class="empty"><div class="ei">📊</div>${t('noData')}</div>`;
+    else names.forEach(n=>html+=staffCard(n,rf,oDrill));
+    el.innerHTML=html;return;
+  }
+
+  // Portfolio overview
+  const allRf=HCODES.reduce((acc,code)=>[...acc,...filtered(code)],[]);
+  const allV=allRf.map(r=>({...r,_v:calcV(r,r.hotel_code)})).filter(r=>r._v);
+  const portAvgV=allV.length?Math.round(allV.reduce((s,r)=>s+r._v.vm,0)/allV.length):0;
+
+  let html=`<div style="font-size:11px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">${t('portfolio')}</div>
+  <div class="pills">
+    ${[['day',t('tod')],['week',t('l7')],['month',t('mon')],['all',t('all')]].map(([v,l])=>
+      `<button class="pill ${aRange===v?'active':''}" onclick="aRange='${v}';render()">${l}</button>`).join('')}
+  </div>
+  <div class="sg">
+    <div class="sc"><div class="sv">${allRf.length}</div><div class="sl">Total ${t('shifts')}</div></div>
+    <div class="sc"><div class="sv">${allRf.reduce((s,r)=>s+tRooms(r,r.hotel_code),0)}</div><div class="sl">Total ${t('rms')}</div></div>
+    <div class="sc"><div class="sv" style="color:${vc(portAvgV)}">${portAvgV>0?'+':''}${portAvgV}m</div><div class="sl">${t('avgV')}</div></div>
+  </div>
+  <div style="font-size:11px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;margin-top:4px">${t('comparison')}</div>
+  <div class="owner-compare">`;
+
+  HCODES.forEach(code=>{
+    const hh=HOTELS[code];
+    const rf=filtered(code);
+    const wv=rf.map(r=>({...r,_v:calcV(r,code)})).filter(r=>r._v);
+    const avgV2=wv.length?Math.round(wv.reduce((s,r)=>s+r._v.vm,0)/wv.length):null;
+    const avgR2=rf.length?(rf.reduce((s,r)=>s+tRooms(r,code),0)/rf.length).toFixed(1):'-';
+    const avgE2=wv.length?Math.round(wv.reduce((s,r)=>s+r._v.em,0)/wv.length):'-';
+    const satC=rf.filter(r=>r.rating==='Satisfactory').length;
+    const unsC=rf.filter(r=>r.rating==='Unsatisfactory').length;
+    const trnC=rf.filter(r=>r.rating==='Needs Training').length;
+    const vcol2=avgV2!==null?vc(avgV2):'var(--text3)';
+    html+=`<div class="hcard" style="background:${hh.color}0d;border-color:${hh.color}33">
+      <div class="hcard-header">
+        <div><div class="hcard-name" style="color:${hh.color}">${hh.short}</div><div class="hcard-code">${code}</div></div>
+        <span style="font-size:10px;color:var(--text3);font-family:var(--mono)">${rf.length} shift${rf.length!==1?'s':''}</span>
       </div>
-      <div class="sa-stats">
-        <div class="sa-stat"><div class="sa-stat-val">${avgRooms}</div><div class="sa-stat-lbl">${t('avgRooms')}</div></div>
-        <div class="sa-stat"><div class="sa-stat-val">${avgExpMin}</div><div class="sa-stat-lbl">${t('expMin')}</div></div>
-        <div class="sa-stat"><div class="sa-stat-val" style="color:${col}">${avgVarMin!==null?(avgVarMin>0?'+':'')+avgVarMin+'m':'—'}</div><div class="sa-stat-lbl">${t('avgVariance')}</div></div>
+      <div class="hcard-metrics">
+        <div class="hm"><div class="hmv">${rf.reduce((s,r)=>s+tRooms(r,code),0)}</div><div class="hml">${t('rms')}</div></div>
+        <div class="hm"><div class="hmv">${avgR2}</div><div class="hml">Avg ${t('rms')}/shift</div></div>
+        <div class="hm"><div class="hmv" style="color:${vcol2}">${avgV2!==null?(avgV2>0?'+':'')+avgV2+'m':'—'}</div><div class="hml">${t('avgV')}</div></div>
       </div>
-      ${rowsV.length?`<div class="sa-breakdown" style="margin-bottom:6px">
-        <div class="sa-bd-item" style="background:rgba(46,204,138,.1);color:var(--green)">✓ ${ontime} ${t('onTime')}</div>
-        <div class="sa-bd-item" style="background:rgba(255,79,109,.1);color:var(--red)">↑ ${over} ${t('over')}</div>
-        <div class="sa-bd-item" style="background:rgba(79,142,247,.1);color:var(--blue)">↓ ${under} ${t('early')}</div>
+      ${rf.length?`<div class="hcard-ratings">
+        <div class="hri" style="background:rgba(46,204,138,.1);color:var(--green)">${satC} ${t('sat')}</div>
+        <div class="hri" style="background:rgba(255,79,109,.1);color:var(--red)">${unsC} ${t('uns')}</div>
+        <div class="hri" style="background:rgba(255,176,58,.1);color:var(--amber)">${trnC} ${t('trn')}</div>
       </div>`:''}
-      ${rows.length?`<div class="sa-breakdown">
-        <div class="sa-bd-item" style="background:rgba(46,204,138,.1);color:var(--green)">${satCount} ${t('sat')}</div>
-        <div class="sa-bd-item" style="background:rgba(255,79,109,.1);color:var(--red)">${unsatCount} ${t('unsat')}</div>
-        <div class="sa-bd-item" style="background:rgba(255,176,58,.1);color:var(--amber)">${trainCount} ${t('train')}</div>
-      </div>`:''}
+      <button class="hcard-drill" onclick="oDrill='${code}';render()">${t('viewStaff')}</button>
     </div>`;
   });
+
+  html+=`</div>
+  <button class="ebtn" onclick="expOwnerAll()">${t('expAll')}</button>`;
   el.innerHTML=html;
 }
 
 // ── SETTINGS ──────────────────────────────────────────────────────────────────
-function renderSettings(el){
+function rSettings(el){
+  const cfg=h();
   el.innerHTML=`
-  <div class="settings-section">
-    <div class="settings-title">${t('staffList')}</div>
-    ${staffList.length===0?`<div style="color:var(--text3);font-size:12px;padding:8px 0">${t('noStaff')}</div>`:''}
-    ${staffList.map(name=>{
-      const shifts=records.filter(r=>r.name===name).length;
-      return `<div class="staff-item">
-        <div><div class="staff-item-name">${name}</div><div class="staff-item-meta">${shifts} shift${shifts!==1?'s':''}</div></div>
-        <button class="remove-btn" onclick="removeStaff('${name}')">${t('removeStaff')}</button>
-      </div>`;
-    }).join('')}
-    <div class="add-row">
-      <input id="nsi" placeholder="${t('addName')}" value="${newStaffName}"
-        oninput="newStaffName=this.value" onkeydown="if(event.key==='Enter')addStaff()"/>
-      <button class="add-row-btn" onclick="addStaff()">${t('add')}</button>
+  <div class="ss">
+    <div class="st">${t('staffList')} — ${cfg.short}</div>
+    ${staff.length===0?`<div style="color:var(--text3);font-size:12px;padding:8px 0">${t('noStaff')}</div>`:''}
+    ${staff.map(n=>{const shifts=recs.filter(r=>r.name===n&&r.hotel_code===hotel).length;
+      return`<div class="si"><div><div class="sin">${n}</div><div class="sim">${shifts} shift${shifts!==1?'s':''}</div></div>
+        <button class="rb" onclick="removeStaff('${n}')">${t('rem')}</button></div>`;}).join('')}
+    <div class="ar">
+      <input id="nsi" placeholder="${t('addN')}" value="${newName}" oninput="newName=this.value" onkeydown="if(event.key==='Enter')addStaff()"/>
+      <button class="arb" onclick="addStaff()">${t('add')}</button>
     </div>
   </div>
-  <div class="settings-section">
-    <div class="settings-title">${t('timeStandards')}</div>
-    ${[
-      ['K1KN CO/SOLC', STD.k1kn_cosolc],['K1KN SO', STD.k1kn_so],
-      ['K2QN CO/SOLC', STD.k2qn_cosolc],['K2QN SO', STD.k2qn_so],
-      ['O1KN CO/SOLC', STD.o1kn_cosolc],['O1KN SO', STD.o1kn_so],
-      ['Bad Room', STD.bad_rooms],['Deep Clean', STD.deep_cleans],
-      [t('overhead'), STD.overhead]
-    ].map(([l,v])=>`<div class="std-row"><span class="std-lbl">${l}</span><span class="std-val">${v} min</span></div>`).join('')}
-    <div style="font-size:11px;color:var(--text3);margin-top:8px;padding:8px 10px;background:var(--card2);border-radius:6px">
-      ${lang==='es'?'Los estándares de tiempo solo pueden ser modificados por el propietario.':'Time standards can only be modified by the owner.'}
+  <div class="ss">
+    <div class="st">${t('timeStd')}</div>
+    ${cfg.rooms.map(rm=>`<div class="stdr"><span class="stdl">${lang==='es'?rm.le:rm.l}</span><span class="stdv">${rm.m} min</span></div>`).join('')}
+    <div class="stdr"><span class="stdl">${t('oh')}</span><span class="stdv">${cfg.oh} min</span></div>
+    <div style="font-size:11px;color:var(--text3);margin-top:7px;padding:8px 10px;background:var(--card2);border-radius:6px">
+      ${lang==='es'?'Solo el propietario puede modificar los estándares.':'Time standards can only be modified by the owner.'}
     </div>
   </div>
-  <div style="padding:10px 0">
-    <button onclick="settingsUnlocked=false;switchTab('log')" style="background:none;border:1px solid var(--border);border-radius:8px;color:var(--text3);padding:8px 14px;font-size:12px;cursor:pointer;font-family:var(--font);width:100%">
-      ${lang==='es'?'🔒 Cerrar Configuración':'🔒 Lock Settings'}
-    </button>
+  <div class="ss">
+    <div class="st">Hotel</div>
+    <button onclick="showHotelSelector()" style="width:100%;padding:10px;background:var(--card2);border:1.5px solid var(--border);border-radius:var(--rs);color:var(--text2);font-size:13px;font-weight:600;font-family:var(--font);cursor:pointer;margin-bottom:7px">${t('swHotel')}</button>
+    <button onclick="setUnlocked=false;switchTab('log')" style="width:100%;padding:10px;background:none;border:1px solid var(--border);border-radius:var(--rs);color:var(--text3);font-size:13px;cursor:pointer;font-family:var(--font)">${t('lockSet')}</button>
   </div>`;
 }
 
-// ── Edit helpers ──────────────────────────────────────────────────────────────
-function startEdit(id){
-  const r=records.find(x=>x.id===id); if(!r) return;
-  editingId=id; form={...r, clock_in: r.clock_in||r.start_time||'8:30 AM'};
-  switchTab('entry');
+// ── Export ────────────────────────────────────────────────────────────────────
+function expDay(){
+  const d=fDate||new Date().toISOString().slice(0,10);
+  expCSV(recs.filter(r=>r.date===d&&r.hotel_code===hotel),`hk-${hotel}-${d}.csv`,hotel);
 }
-function cancelEdit(){ editingId=null; form=emptyForm(); switchTab('log'); }
+function expAll(){
+  expCSV(recs.filter(r=>r.hotel_code===hotel),`hk-${hotel}-all.csv`,hotel);
+}
+function expOwnerAll(){
+  const today=new Date().toISOString().slice(0,10);
+  expCSV(recs,`hk-all-${today}.csv`,null);
+}
+function expCSV(rows,filename,hcode){
+  if(!rows.length)return toast('No data',false);
+  const cfg=hcode?HOTELS[hcode]:HOTELS['WKFCW'];
+  const hdrs=['Date','Name','Hotel',...cfg.rooms.map(r=>r.l),'Clock In','Clock Out','Exp Min','Act Min','Variance Min','Rating'];
+  const lines=[hdrs.join(',')];
+  rows.forEach(r=>{
+    const v=calcV(r,r.hotel_code||hcode);
+    lines.push([r.date,r.name,r.hotel_code,...cfg.rooms.map(rm=>r[rm.k]||0),r.clock_in||'',r.clock_out||'',v?v.em:'',v?v.am:'',v?v.vm:'',r.rating||''].join(','));
+  });
+  const blob=new Blob([lines.join('\n')],{type:'text/csv'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;a.click();
+}
 
-// ── Boot ──────────────────────────────────────────────────────────────────────
-
-// Time Picker
-let activePickerField=null, activePickerBtn=null;
-let tpHour=8, tpMin=30, tpAmPm='AM';
-
-function openTimePicker(field,btnId){
-  closeTimePicker();
-  activePickerField=field; activePickerBtn=btnId;
+// ── Time picker ───────────────────────────────────────────────────────────────
+function openTP(field,btnId){
+  closTP();tpField=field;tpBtn=btnId;
   const cur=form[field];
-  if(cur){const m=cur.match(/(\d+):(\d+)\s*(AM|PM)/i);if(m){tpHour=+m[1];tpMin=+m[2];tpAmPm=m[3].toUpperCase();}}
-  else{tpHour=8;tpMin=30;tpAmPm='AM';}
-  const btn=document.getElementById(btnId);
-  const rect=btn.getBoundingClientRect();
-  const dp=document.createElement('div');
-  dp.className='time-picker-dropdown visible';dp.id='tpDropdown';
-  const hours=[12,1,2,3,4,5,6,7,8,9,10,11];
-  const mins=[0,5,10,15,20,25,30,35,40,45,50,55];
+  if(cur){const m=cur.match(/(\d+):(\d+)\s*(AM|PM)/i);if(m){tpH=+m[1];tpM=+m[2];tpAP=m[3].toUpperCase();}}
+  else{tpH=8;tpM=30;tpAP='AM';}
+  const btn=document.getElementById(btnId);const rect=btn.getBoundingClientRect();
+  const dp=document.createElement('div');dp.className='tpdd vis';dp.id='tpdd';
+  const hrs=[12,1,2,3,4,5,6,7,8,9,10,11];
+  const mns=[0,5,10,15,20,25,30,35,40,45,50,55];
   dp.innerHTML=`
-    <div class="tp-col">
-      <div class="tp-col-label">HR</div>
-      <div class="tp-scroll" id="tp_hr">
-        ${hours.map(h=>`<div class="tp-item ${h===tpHour?'selected':''}" onclick="tpSetHour(${h},this)">${h}</div>`).join('')}
-      </div>
-    </div>
-    <div class="tp-divider">:</div>
-    <div class="tp-col">
-      <div class="tp-col-label">MIN</div>
-      <div class="tp-scroll" id="tp_min">
-        ${mins.map(m=>`<div class="tp-item ${m===tpMin?'selected':''}" onclick="tpSetMin(${m},this)">${String(m).padStart(2,'0')}</div>`).join('')}
-      </div>
-    </div>
-    <div class="tp-col" style="min-width:44px">
-      <div class="tp-col-label">AM/PM</div>
-      <div class="tp-scroll" id="tp_ampm">
-        ${['AM','PM'].map(a=>`<div class="tp-item ${a===tpAmPm?'selected':''}" onclick="tpSetAmPm('${a}',this)">${a}</div>`).join('')}
-      </div>
-    </div>
+    <div class="tpc"><div class="tpcl">HR</div><div class="tps" id="tp_h">
+      ${hrs.map(h=>`<div class="tpi ${h===tpH?'sel':''}" onclick="tpSH(${h},this)">${h}</div>`).join('')}
+    </div></div>
+    <div class="tpdiv">:</div>
+    <div class="tpc"><div class="tpcl">MIN</div><div class="tps" id="tp_m">
+      ${mns.map(m=>`<div class="tpi ${m===tpM?'sel':''}" onclick="tpSM(${m},this)">${String(m).padStart(2,'0')}</div>`).join('')}
+    </div></div>
+    <div class="tpc" style="min-width:42px"><div class="tpcl">AM/PM</div><div class="tps" id="tp_a">
+      ${['AM','PM'].map(a=>`<div class="tpi ${a===tpAP?'sel':''}" onclick="tpSA('${a}',this)">${a}</div>`).join('')}
+    </div></div>
     <div style="display:flex;flex-direction:column;justify-content:flex-end">
-      <button class="tp-done" onclick="confirmTimePicker()">Done</button>
+      <button class="tpok" onclick="confTP()">Done</button>
     </div>`;
   let top=rect.bottom+6,left=rect.left;
   if(top+220>window.innerHeight)top=rect.top-220;
   if(left+240>window.innerWidth)left=window.innerWidth-248;
   dp.style.top=top+'px';dp.style.left=left+'px';
-  document.body.appendChild(dp);
-  btn.classList.add('open');
+  document.body.appendChild(dp);btn.classList.add('open');
   setTimeout(()=>{
-    ['tp_hr','tp_min','tp_ampm'].forEach(id=>{
-      const sc=document.getElementById(id),sel=sc?.querySelector('.selected');
-      if(sel)sc.scrollTop=sel.offsetTop-55;
-    });
-    document.addEventListener('click',outsidePickerClick);
+    ['tp_h','tp_m','tp_a'].forEach(id=>{const sc=document.getElementById(id),s=sc?.querySelector('.sel');if(s)sc.scrollTop=s.offsetTop-55;});
+    document.addEventListener('click',outTP);
   },60);
 }
-
-function outsidePickerClick(e){
-  const dp=document.getElementById('tpDropdown');
-  const btn=activePickerBtn?document.getElementById(activePickerBtn):null;
-  if(dp&&!dp.contains(e.target)&&btn&&!btn.contains(e.target))closeTimePicker();
+function outTP(e){const dp=document.getElementById('tpdd');const btn=tpBtn?document.getElementById(tpBtn):null;if(dp&&!dp.contains(e.target)&&btn&&!btn.contains(e.target))closTP();}
+function closTP(){document.getElementById('tpdd')?.remove();document.removeEventListener('click',outTP);if(tpBtn)document.getElementById(tpBtn)?.classList.remove('open');tpField=null;tpBtn=null;}
+function tpSH(h,el){tpH=h;document.querySelectorAll('#tp_h .tpi').forEach(i=>i.classList.remove('sel'));el.classList.add('sel');}
+function tpSM(m,el){tpM=m;document.querySelectorAll('#tp_m .tpi').forEach(i=>i.classList.remove('sel'));el.classList.add('sel');}
+function tpSA(a,el){tpAP=a;document.querySelectorAll('#tp_a .tpi').forEach(i=>i.classList.remove('sel'));el.classList.add('sel');}
+function confTP(){
+  const ts=`${tpH}:${String(tpM).padStart(2,'0')} ${tpAP}`;
+  form[tpField]=ts;
+  const btn=tpBtn?document.getElementById(tpBtn):null;
+  if(btn)btn.textContent=ts;
+  closTP();uvp();
 }
 
-function closeTimePicker(){
-  document.getElementById('tpDropdown')?.remove();
-  document.removeEventListener('click',outsidePickerClick);
-  if(activePickerBtn)document.getElementById(activePickerBtn)?.classList.remove('open');
-  activePickerField=null;activePickerBtn=null;
-}
-
-function tpSetHour(h,el){tpHour=h;document.querySelectorAll('#tp_hr .tp-item').forEach(i=>i.classList.remove('selected'));el.classList.add('selected');}
-function tpSetMin(m,el){tpMin=m;document.querySelectorAll('#tp_min .tp-item').forEach(i=>i.classList.remove('selected'));el.classList.add('selected');}
-function tpSetAmPm(a,el){tpAmPm=a;document.querySelectorAll('#tp_ampm .tp-item').forEach(i=>i.classList.remove('selected'));el.classList.add('selected');}
-
-function confirmTimePicker(){
-  const timeStr=`${tpHour}:${String(tpMin).padStart(2,'0')} ${tpAmPm}`;
-  form[activePickerField]=timeStr;
-  const btn=activePickerBtn?document.getElementById(activePickerBtn):null;
-  if(btn)btn.textContent=timeStr;
-  closeTimePicker();updateVarPreview();
-}
-
-updateTabLabels();
-loadAll();
+// ── Boot ──────────────────────────────────────────────────────────────────────
+updateTabs();
+render();
+showHotelSelector();
 </script>
 </body>
 </html>

@@ -411,15 +411,21 @@ async function saveDT(date){
 async function addStaff(){
   const n=newName.trim();
   if(!n)return;
+  // Client-side duplicate check first — no server call needed
+  if(staff.map(s=>s.toLowerCase()).includes(n.toLowerCase()))return toast(t('exists'),false);
   try{
-    // Check if already exists for this hotel
-    const existing=await api(`staff?name=eq.${encodeURIComponent(n)}&hotel_code=eq.${hotel}&select=id`);
-    if(existing&&existing.length>0)return toast(t('exists'),false);
-    await api('staff',{method:'POST',prefer:'return=minimal',body:JSON.stringify({name:n,hotel_code:hotel})});
+    await api('staff',{method:'POST',prefer:'return=representation',body:JSON.stringify({name:n,hotel_code:hotel})});
     newName='';
+    await loadAll();
     toast(n+t('added'));
-    await loadAll(); // Full reload so Entry dropdown and Log filter both update immediately
-  }catch(e){toast('Error: '+e.message.slice(0,60),false);console.error('addStaff error:',e);}
+  }catch(e){
+    // If it's a duplicate key error, the name was already added — just reload silently
+    if(e.message.includes('23505')||e.message.includes('already exists')){
+      newName='';await loadAll();toast(n+t('added'));
+    } else {
+      toast('Error: '+e.message.slice(0,80),false);
+    }
+  }
 }
 
 async function removeStaff(n){

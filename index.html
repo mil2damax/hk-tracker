@@ -357,8 +357,10 @@ async function api(path,opts={}){
   const url=path.startsWith('http')?path:`${SB}/rest/v1/${path}`;
   const res=await fetch(url,{...opts,headers:{'apikey':SK,'Authorization':`Bearer ${SK}`,'Content-Type':'application/json','Prefer':opts.prefer||'',...(opts.headers||{})}});
   if(!res.ok){const e=await res.text();throw new Error(e);}
-  if(res.status===204)return null;
-  return res.json();
+  if(res.status===204||res.status===201)return null;
+  const text=await res.text();
+  if(!text||text.trim()==='')return null;
+  return JSON.parse(text);
 }
 
 async function loadAll(){
@@ -414,7 +416,7 @@ async function addStaff(){
   // Client-side duplicate check first — no server call needed
   if(staff.map(s=>s.toLowerCase()).includes(n.toLowerCase()))return toast(t('exists'),false);
   try{
-    await api('staff',{method:'POST',prefer:'return=representation',body:JSON.stringify({name:n,hotel_code:hotel})});
+    await api('staff',{method:'POST',prefer:'return=minimal',body:JSON.stringify({name:n,hotel_code:hotel})});
     newName='';
     await loadAll();
     toast(n+t('added'));

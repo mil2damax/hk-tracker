@@ -411,10 +411,14 @@ async function saveDT(date){
 async function addStaff(){
   const n=newName.trim();
   if(!n)return;
-  if(staff.includes(n))return toast(t('exists'),false);
   try{
+    // Check if already exists for this hotel
+    const existing=await api(`staff?name=eq.${encodeURIComponent(n)}&hotel_code=eq.${hotel}&select=id`);
+    if(existing&&existing.length>0)return toast(t('exists'),false);
     await api('staff',{method:'POST',prefer:'return=minimal',body:JSON.stringify({name:n,hotel_code:hotel})});
-    staff.push(n);staff.sort();newName='';toast(n+t('added'));render();
+    newName='';
+    toast(n+t('added'));
+    await loadAll(); // Full reload so Entry dropdown and Log filter both update immediately
   }catch(e){toast('Error: '+e.message.slice(0,60),false);console.error('addStaff error:',e);}
 }
 

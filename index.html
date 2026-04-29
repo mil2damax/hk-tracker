@@ -727,7 +727,8 @@ function rEntry(el){
     <div class="g4">
       ${cfg.rooms.map(rm=>`<div class="field"><label class="fl">${lang==='es'?rm.le:rm.l}</label>
         <input type="number" class="fi" style="text-align:center" value="${form[rm.k]||0}" min="0"
-          oninput="form['${rm.k}']=+this.value;uvp()"/></div>`).join('')}
+          oninput="form['${rm.k}']=+this.value;uvp()"
+          onchange="form['${rm.k}']=+this.value;uvp()"/></div>`).join('')}
     </div>
     <div class="sdiv">${t('rating')}</div>
     <div class="rrow">
@@ -753,26 +754,18 @@ function setR(r){
   });
 }
 function uvp(){
-  const em=expMin(form);
+  if(!hotel||!HOTELS[hotel])return;
+  const em=expMin(form,hotel);
   const sf=toF(form.clock_in);
   const ee=sf!==null?toT(sf+em/60):'—';
-  const v=calcV(form);
+  const v=calcV(form,hotel);
   const col=v?vc(v.vm):'var(--text3)';
-  // Always update expected min
   const a=document.getElementById('vMin');
   if(a)a.textContent=em>0?em:'—';
-  // Update expected end time whenever clock_in is set
   const b=document.getElementById('vEnd');
-  if(b){
-    b.textContent=ee;
-    b.style.color=sf!==null&&em>0?'var(--blue)':'var(--text3)';
-  }
-  // Update variance only when clock_out is also set
+  if(b){b.textContent=ee;b.style.color=sf!==null&&em>0?'var(--blue)':'var(--text3)';}
   const cv=document.getElementById('vVar');
-  if(cv){
-    cv.textContent=v?vl(v.vm):'—';
-    cv.style.color=v?col:'var(--text3)';
-  }
+  if(cv){cv.textContent=v?vl(v.vm):'—';cv.style.color=v?col:'var(--text3)';}
 }
 function cancelEdit(){editId=null;form=ef();switchTab('log');}
 

@@ -698,11 +698,15 @@ function showDTForm(date){
 // ── ENTRY ─────────────────────────────────────────────────────────────────────
 function rEntry(el){
   const cfg=h();
-  // Auto-select first staff if name not set
-  if(!form.name && staff.length>0) form.name=staff[0];
-  const em=expMin(form,hotel);const sf=toF(form.clock_in);
-  const ee=sf!==null?toT(sf+em/60):'—';
-  const v=calcV(form,hotel);const col=v?vc(v.vm):'var(--text3)';
+  // Build form HTML
+  const roomInputs=cfg.rooms.map((rm,ri)=>`
+    <div class="field">
+      <label class="fl">${lang==='es'?rm.le:rm.l}</label>
+      <input type="number" class="fi" style="text-align:center" id="rm_${ri}" value="${form[rm.k]||0}" min="0"/>
+    </div>`).join('');
+
+  const staffOpts=staff.map(n=>`<option value="${n}">${n}</option>`).join('');
+
   el.innerHTML=`<div class="card">
     <div class="card-title">${editId?t('editE'):t('newE')}</div>
     <div class="g2">
@@ -711,55 +715,93 @@ function rEntry(el){
       <div class="field"><label class="fl">${t('hk')} *</label>
         <select class="fs" id="entry_name">
           <option value="">${t('selHK')}</option>
-          ${staff.map(n=>`<option value="${n}" ${form.name===n?'selected':''}>${n}</option>`).join('')}
+          ${staffOpts}
         </select></div>
     </div>
     <div class="g2">
       <div class="field"><label class="fl">${t('cInHB')}</label>
-        <button class="tpd" id="ci_b" onclick="openTP('clock_in','ci_b')">${form.clock_in||'Select...'}</button></div>
+        <button class="tpd" id="ci_b">${form.clock_in||'Select...'}</button></div>
       <div class="field"><label class="fl">${t('cOutHB')} *</label>
-        <button class="tpd" id="co_b" onclick="openTP('clock_out','co_b')">${form.clock_out||'Select...'}</button></div>
+        <button class="tpd" id="co_b">${form.clock_out||'Select...'}</button></div>
     </div>
     <div class="vp">
-      <div class="vi"><span class="vl">${t('expMin')}</span><span class="vv" id="vMin">${em}</span></div>
-      <div class="vi"><span class="vl">${t('expE')}</span><span class="vv" id="vEnd" style="color:var(--blue)">${ee}</span></div>
-      <div class="vi"><span class="vl">${t('var')}</span><span class="vv" id="vVar" style="color:${col}">${v?vl(v.vm):'—'}</span></div>
+      <div class="vi"><span class="vl">${t('expMin')}</span><span class="vv" id="vMin">—</span></div>
+      <div class="vi"><span class="vl">${t('expE')}</span><span class="vv" id="vEnd">—</span></div>
+      <div class="vi"><span class="vl">${t('var')}</span><span class="vv" id="vVar">—</span></div>
     </div>
     <div class="sdiv">${t('rooms')}</div>
-    <div class="g4">
-      ${cfg.rooms.map((rm,ri)=>`<div class="field"><label class="fl">${lang==='es'?rm.le:rm.l}</label>
-        <input type="number" class="fi" style="text-align:center" id="rm_${ri}" value="${form[rm.k]||0}" min="0"/></div>`).join('')}
-    </div>
+    <div class="g4">${roomInputs}</div>
     <div class="sdiv">${t('rating')}</div>
-    <div class="rrow">
-      <button class="ropt sat ${form.rating==='Satisfactory'?'sel':''}" onclick="setR('Satisfactory')">${t('sat')}</button>
-      <button class="ropt uns ${form.rating==='Unsatisfactory'?'sel':''}" onclick="setR('Unsatisfactory')">${t('uns')}</button>
-      <button class="ropt trn ${form.rating==='Needs Training'?'sel':''}" onclick="setR('Needs Training')">${t('trn')}</button>
+    <div class="rrow" id="rrow">
+      <button class="ropt sat" id="r_sat">${t('sat')}</button>
+      <button class="ropt uns" id="r_uns">${t('uns')}</button>
+      <button class="ropt trn" id="r_trn">${t('trn')}</button>
     </div>
     <div style="margin-top:16px">
-      <button class="btn btnp" onclick="saveRec()">${editId?t('saveC'):t('saveE')}</button>
-      <button class="btn btns" onclick="cancelEdit()">${t('cancel')}</button>
+      <button class="btn btnp" id="btn_save">${editId?t('saveC'):t('saveE')}</button>
+      <button class="btn btns" id="btn_cancel">${t('cancel')}</button>
     </div>
   </div>`;
-  setTimeout(()=>{
-    const dateEl=document.getElementById('entry_date');
-    const nameEl=document.getElementById('entry_name');
-    if(dateEl){dateEl.addEventListener('change',e=>{form.date=e.target.value;});dateEl.addEventListener('input',e=>{form.date=e.target.value;});}
-    if(nameEl){nameEl.addEventListener('change',e=>{form.name=e.target.value;uvp();});}
-    const cfg2=h();
-    if(cfg2){cfg2.rooms.forEach((rm,ri)=>{const el=document.getElementById('rm_'+ri);if(el){el.addEventListener('input',e=>{form[rm.k]=+e.target.value;uvp();});el.addEventListener('change',e=>{form[rm.k]=+e.target.value;uvp();});}});}
-    uvp();
-  },50);
+
+  // Wire up ALL events via addEventListener - no inline handlers
+  const dateEl=document.getElementById('entry_date');
+  const nameEl=document.getElementById('entry_name');
+  const ciEl=document.getElementById('ci_b');
+  const coEl=document.getElementById('co_b');
+
+  // Set correct selected option for housekeeper
+  if(nameEl && form.name){
+    for(let i=0;i<nameEl.options.length;i++){
+      if(nameEl.options[i].value===form.name){nameEl.selectedIndex=i;break;}
+    }
+  }
+
+  // Set rating button states
+  function updateRatingUI(){
+    ['sat','uns','trn'].forEach(id=>{
+      const el=document.getElementById('r_'+id);
+      if(!el)return;
+      const map={sat:'Satisfactory',uns:'Unsatisfactory',trn:'Needs Training'};
+      el.classList.toggle('sel',form.rating===map[id]);
+    });
+  }
+  updateRatingUI();
+
+  if(dateEl){
+    dateEl.addEventListener('change',e=>{form.date=e.target.value;});
+    dateEl.addEventListener('input',e=>{form.date=e.target.value;});
+  }
+  if(nameEl) nameEl.addEventListener('change',e=>{form.name=e.target.value;uvp();});
+  if(ciEl) ciEl.addEventListener('click',()=>openTP('clock_in','ci_b'));
+  if(coEl) coEl.addEventListener('click',()=>openTP('clock_out','co_b'));
+
+  cfg.rooms.forEach((rm,ri)=>{
+    const el=document.getElementById('rm_'+ri);
+    if(el){
+      const handler=e=>{form[rm.k]=+e.target.value||0;uvp();};
+      el.addEventListener('input',handler);
+      el.addEventListener('change',handler);
+    }
+  });
+
+  const satEl=document.getElementById('r_sat');
+  const unsEl=document.getElementById('r_uns');
+  const trnEl=document.getElementById('r_trn');
+  if(satEl) satEl.addEventListener('click',()=>{form.rating=form.rating==='Satisfactory'?'':'Satisfactory';updateRatingUI();});
+  if(unsEl) unsEl.addEventListener('click',()=>{form.rating=form.rating==='Unsatisfactory'?'':'Unsatisfactory';updateRatingUI();});
+  if(trnEl) trnEl.addEventListener('click',()=>{form.rating=form.rating==='Needs Training'?'':'Needs Training';updateRatingUI();});
+
+  const saveEl=document.getElementById('btn_save');
+  const cancelEl=document.getElementById('btn_cancel');
+  if(saveEl) saveEl.addEventListener('click',saveRec);
+  if(cancelEl) cancelEl.addEventListener('click',cancelEdit);
+
+  // Initial variance calculation
+  uvp();
 }
 
 function setR(r){
-  form.rating=form.rating===r?'':r;
-  document.querySelectorAll('.ropt').forEach(b=>{
-    const isSat=b.classList.contains('sat')&&r==='Satisfactory'&&form.rating===r;
-    const isUns=b.classList.contains('uns')&&r==='Unsatisfactory'&&form.rating===r;
-    const isTrn=b.classList.contains('trn')&&r==='Needs Training'&&form.rating===r;
-    b.classList.toggle('sel',isSat||isUns||isTrn);
-  });
+  // Handled inside rEntry via addEventListener
 }
 function uvp(){
   if(!hotel||!HOTELS[hotel])return;

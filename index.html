@@ -350,7 +350,7 @@ let pendingAction=null; // for PIN-gated edit/delete
 
 function t(k){return T[lang][k]||k;}
 function h(){return HOTELS[hotel];}
-function ef(){return{date:new Date().toISOString().slice(0,10),name:'',k1kn_cosolc:0,k1kn_so:0,k2qn_cosolc:0,k2qn_so:0,o1kn_cosolc:0,o1kn_so:0,bad_rooms:0,deep_cleans:0,clock_in:'8:30 AM',clock_out:'',rating:''};}
+function ef(){return{date:'',name:'',k1kn_cosolc:0,k1kn_so:0,k2qn_cosolc:0,k2qn_so:0,o1kn_cosolc:0,o1kn_so:0,bad_rooms:0,deep_cleans:0,clock_in:'8:30 AM',clock_out:'',rating:''};}
 
 // ── Supabase ──────────────────────────────────────────────────────────────────
 async function api(path,opts={}){
@@ -707,9 +707,9 @@ function rEntry(el){
     <div class="card-title">${editId?t('editE'):t('newE')}</div>
     <div class="g2">
       <div class="field"><label class="fl">${t('date')} *</label>
-        <input type="date" class="fi" value="${form.date}" oninput="form.date=this.value" onchange="form.date=this.value"/></div>
+        <input type="date" class="fi" id="entry_date" value="${form.date}"/></div>
       <div class="field"><label class="fl">${t('hk')} *</label>
-        <select class="fs" onchange="form.name=this.value;uvp()">
+        <select class="fs" id="entry_name">
           <option value="">${t('selHK')}</option>
           ${staff.map(n=>`<option value="${n}" ${form.name===n?'selected':''}>${n}</option>`).join('')}
         </select></div>
@@ -727,10 +727,8 @@ function rEntry(el){
     </div>
     <div class="sdiv">${t('rooms')}</div>
     <div class="g4">
-      ${cfg.rooms.map(rm=>`<div class="field"><label class="fl">${lang==='es'?rm.le:rm.l}</label>
-        <input type="number" class="fi" style="text-align:center" value="${form[rm.k]||0}" min="0"
-          oninput="form['${rm.k}']=+this.value;uvp()"
-          onchange="form['${rm.k}']=+this.value;uvp()"/></div>`).join('')}
+      ${cfg.rooms.map((rm,ri)=>`<div class="field"><label class="fl">${lang==='es'?rm.le:rm.l}</label>
+        <input type="number" class="fi" style="text-align:center" id="rm_${ri}" value="${form[rm.k]||0}" min="0"/></div>`).join('')}
     </div>
     <div class="sdiv">${t('rating')}</div>
     <div class="rrow">
@@ -743,8 +741,16 @@ function rEntry(el){
       <button class="btn btns" onclick="cancelEdit()">${t('cancel')}</button>
     </div>
   </div>`;
+  setTimeout(()=>{
+    const dateEl=document.getElementById('entry_date');
+    const nameEl=document.getElementById('entry_name');
+    if(dateEl){dateEl.addEventListener('change',e=>{form.date=e.target.value;});dateEl.addEventListener('input',e=>{form.date=e.target.value;});}
+    if(nameEl){nameEl.addEventListener('change',e=>{form.name=e.target.value;uvp();});}
+    const cfg2=h();
+    if(cfg2){cfg2.rooms.forEach((rm,ri)=>{const el=document.getElementById('rm_'+ri);if(el){el.addEventListener('input',e=>{form[rm.k]=+e.target.value;uvp();});el.addEventListener('change',e=>{form[rm.k]=+e.target.value;uvp();});}});}
+    uvp();
+  },50);
 }
-  setTimeout(uvp,10);
 
 function setR(r){
   form.rating=form.rating===r?'':r;
@@ -762,7 +768,6 @@ function uvp(){
   const ee=sf!==null?toT(sf+em/60):'—';
   const v=calcV(form,hotel);
   const col=v?vc(v.vm):'var(--text3)';
-  console.log('uvp fired: hotel='+hotel+' em='+em+' sf='+sf+' ee='+ee+' form='+JSON.stringify({k1kn_cosolc:form.k1kn_cosolc,k2qn_cosolc:form.k2qn_cosolc}));
   const a=document.getElementById('vMin');
   if(a)a.textContent=em>0?em:'—';
   const b=document.getElementById('vEnd');

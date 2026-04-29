@@ -698,9 +698,11 @@ function showDTForm(date){
 // ── ENTRY ─────────────────────────────────────────────────────────────────────
 function rEntry(el){
   const cfg=h();
-  const em=expMin(form);const sf=toF(form.clock_in);
+  // Auto-select first staff if name not set
+  if(!form.name && staff.length>0) form.name=staff[0];
+  const em=expMin(form,hotel);const sf=toF(form.clock_in);
   const ee=sf!==null?toT(sf+em/60):'—';
-  const v=calcV(form);const col=v?vc(v.vm):'var(--text3)';
+  const v=calcV(form,hotel);const col=v?vc(v.vm):'var(--text3)';
   el.innerHTML=`<div class="card">
     <div class="card-title">${editId?t('editE'):t('newE')}</div>
     <div class="g2">
@@ -760,6 +762,7 @@ function uvp(){
   const ee=sf!==null?toT(sf+em/60):'—';
   const v=calcV(form,hotel);
   const col=v?vc(v.vm):'var(--text3)';
+  console.log('uvp fired: hotel='+hotel+' em='+em+' sf='+sf+' ee='+ee+' form='+JSON.stringify({k1kn_cosolc:form.k1kn_cosolc,k2qn_cosolc:form.k2qn_cosolc}));
   const a=document.getElementById('vMin');
   if(a)a.textContent=em>0?em:'—';
   const b=document.getElementById('vEnd');

@@ -750,9 +750,13 @@ function rEntry(el){
   const coEl=document.getElementById('co_b');
 
   // Set correct selected option for housekeeper
-  if(nameEl && form.name){
-    for(let i=0;i<nameEl.options.length;i++){
-      if(nameEl.options[i].value===form.name){nameEl.selectedIndex=i;break;}
+  if(nameEl){
+    if(form.name){
+      for(let i=0;i<nameEl.options.length;i++){
+        if(nameEl.options[i].value===form.name){nameEl.selectedIndex=i;break;}
+      }
+    } else {
+      nameEl.selectedIndex=0; // Force blank option when no name set
     }
   }
 

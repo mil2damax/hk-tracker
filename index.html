@@ -350,7 +350,7 @@ let pendingAction=null; // for PIN-gated edit/delete
 
 function t(k){return T[lang][k]||k;}
 function h(){return HOTELS[hotel];}
-function ef(){return{date:'',name:'',k1kn_cosolc:0,k1kn_so:0,k2qn_cosolc:0,k2qn_so:0,o1kn_cosolc:0,o1kn_so:0,bad_rooms:0,deep_cleans:0,clock_in:'8:30 AM',clock_out:'',rating:''};}
+function ef(){return{date:new Date().toISOString().slice(0,10),name:'',k1kn_cosolc:0,k1kn_so:0,k2qn_cosolc:0,k2qn_so:0,o1kn_cosolc:0,o1kn_so:0,bad_rooms:0,deep_cleans:0,clock_in:'8:30 AM',clock_out:'',rating:''};}
 
 // ── Supabase ──────────────────────────────────────────────────────────────────
 async function api(path,opts={}){
@@ -705,9 +705,9 @@ function rEntry(el){
     <div class="card-title">${editId?t('editE'):t('newE')}</div>
     <div class="g2">
       <div class="field"><label class="fl">${t('date')} *</label>
-        <input type="date" class="fi" value="${form.date}" oninput="form.date=this.value"/></div>
+        <input type="date" class="fi" value="${form.date}" oninput="form.date=this.value" onchange="form.date=this.value"/></div>
       <div class="field"><label class="fl">${t('hk')} *</label>
-        <select class="fs" onchange="form.name=this.value">
+        <select class="fs" onchange="form.name=this.value;uvp()">
           <option value="">${t('selHK')}</option>
           ${staff.map(n=>`<option value="${n}" ${form.name===n?'selected':''}>${n}</option>`).join('')}
         </select></div>
@@ -741,6 +741,8 @@ function rEntry(el){
     </div>
   </div>`;
 }
+  setTimeout(uvp,10);
+
 function setR(r){
   form.rating=form.rating===r?'':r;
   document.querySelectorAll('.ropt').forEach(b=>{
@@ -751,12 +753,26 @@ function setR(r){
   });
 }
 function uvp(){
-  const em=expMin(form);const sf=toF(form.clock_in);
+  const em=expMin(form);
+  const sf=toF(form.clock_in);
   const ee=sf!==null?toT(sf+em/60):'—';
-  const v=calcV(form);const col=v?vc(v.vm):'var(--text3)';
-  const a=document.getElementById('vMin'),b=document.getElementById('vEnd'),c=document.getElementById('vVar');
-  if(a)a.textContent=em;if(b)b.textContent=ee;
-  if(c){c.textContent=v?vl(v.vm):'—';c.style.color=col;}
+  const v=calcV(form);
+  const col=v?vc(v.vm):'var(--text3)';
+  // Always update expected min
+  const a=document.getElementById('vMin');
+  if(a)a.textContent=em>0?em:'—';
+  // Update expected end time whenever clock_in is set
+  const b=document.getElementById('vEnd');
+  if(b){
+    b.textContent=ee;
+    b.style.color=sf!==null&&em>0?'var(--blue)':'var(--text3)';
+  }
+  // Update variance only when clock_out is also set
+  const cv=document.getElementById('vVar');
+  if(cv){
+    cv.textContent=v?vl(v.vm):'—';
+    cv.style.color=v?col:'var(--text3)';
+  }
 }
 function cancelEdit(){editId=null;form=ef();switchTab('log');}
 

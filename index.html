@@ -262,8 +262,9 @@ const HOTELS={
       {k:'k2qn_so',l:'King 1BR SO',le:'King 1BR SO',m:20},
       {k:'o1kn_cosolc',l:'Queen Studio CO/SOLC',le:'Queen Studio CO/SOLC',m:30},
       {k:'o1kn_so',l:'Queen Studio SO',le:'Queen Studio SO',m:15},
-      {k:'bad_rooms',l:'Queen 1BR CO/SOLC',le:'Queen 1BR CO/SOLC',m:40},
-      {k:'deep_cleans',l:'Queen 1BR SO',le:'Queen 1BR SO',m:20},
+      {k:'so_full_service',l:'SO Full Service',le:'SO Servicio Completo',m:25},
+      {k:'bad_rooms',l:'Bad Rooms',le:'Hab. Malas',m:50},
+      {k:'deep_cleans',l:'Deep Cleans',le:'Lim. Profunda',m:60},
     ],oh:50},
 };
 const HCODES=['WKFCW','RDURM','RDUTT'];
@@ -350,7 +351,7 @@ let pendingAction=null; // for PIN-gated edit/delete
 
 function t(k){return T[lang][k]||k;}
 function h(){return HOTELS[hotel];}
-function ef(){return{date:'',name:'',k1kn_cosolc:0,k1kn_so:0,k2qn_cosolc:0,k2qn_so:0,o1kn_cosolc:0,o1kn_so:0,bad_rooms:0,deep_cleans:0,clock_in:'8:30 AM',clock_out:'',rating:''};}
+function ef(){return{date:'',name:'',k1kn_cosolc:0,k1kn_so:0,k2qn_cosolc:0,k2qn_so:0,o1kn_cosolc:0,o1kn_so:0,so_full_service:0,bad_rooms:0,deep_cleans:0,clock_in:'8:30 AM',clock_out:'',rating:''};}
 
 // ── Supabase ──────────────────────────────────────────────────────────────────
 async function api(path,opts={}){

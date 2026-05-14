@@ -262,6 +262,7 @@ const HOTELS={
       {k:'o1kn_so',l:'O1KN SO',le:'O1KN SO',m:20},
       {k:'bad_rooms',l:'Bad Rooms',le:'Hab. Malas',m:50},
       {k:'deep_cleans',l:'Deep Cleans',le:'Lim. Profunda',m:60},
+      {k:'public_area',l:'Public Area',le:'Área Pública',m:30},
     ],oh:50},
   RDURM:{name:'Tru by Hilton Wake Forest',short:'Tru WF',pin:'2023',color:'#2ecc8a',
     rooms:[
@@ -271,6 +272,7 @@ const HOTELS={
       {k:'k2qn_so',l:'Queen SO',le:'Queen SO',m:15},
       {k:'bad_rooms',l:'Bad Rooms',le:'Hab. Malas',m:50},
       {k:'deep_cleans',l:'Deep Cleans',le:'Lim. Profunda',m:60},
+      {k:'public_area',l:'Public Area',le:'Área Pública',m:30},
     ],oh:50},
   RDUTT:{name:'Home2 Suites Raleigh North',short:'Home2 RAL',pin:'2021',color:'#ffb03a',
     rooms:[
@@ -280,9 +282,12 @@ const HOTELS={
       {k:'k2qn_so',l:'King 1BR SO',le:'King 1BR SO',m:20},
       {k:'o1kn_cosolc',l:'Queen Studio CO/SOLC',le:'Queen Studio CO/SOLC',m:30},
       {k:'o1kn_so',l:'Queen Studio SO',le:'Queen Studio SO',m:15},
+      {k:'queen_1br_cosolc',l:'Queen 1BR CO/SOLC',le:'Queen 1BR CO/SOLC',m:40},
+      {k:'queen_1br_so',l:'Queen 1BR SO',le:'Queen 1BR SO',m:20},
       {k:'so_full_service',l:'SO Full Service',le:'SO Servicio Completo',m:25},
       {k:'bad_rooms',l:'Bad Rooms',le:'Hab. Malas',m:50},
       {k:'deep_cleans',l:'Deep Cleans',le:'Lim. Profunda',m:60},
+      {k:'public_area',l:'Public Area',le:'Área Pública',m:30},
     ],oh:50},
 };
 const HCODES=['WKFCW','RDURM','RDUTT'];
@@ -297,7 +302,7 @@ const T={
     newE:'New Entry',editE:'Edit Entry',saveE:'Save Entry',saveC:'Save Changes',cancel:'Cancel',
     date:'Date',hk:'Housekeeper',selHK:'— Select —',
     cInHB:'Clock In (Homebase)',cOutHB:'Clock Out (Homebase)',
-    rooms:'Room Counts',bad:'Bad Rooms',deep:'Deep Cleans',
+    rooms:'Room Counts',bad:'Bad Rooms',deep:'Deep Cleans',pubArea:'Public Area',notesLabel:'Notes',
     rating:'Performance Rating',sat:'Satisfactory',uns:'Unsatisfactory',trn:'Needs Training',
     expE:'Expected Out',var:'Variance',
     dateReq:'Date and housekeeper required',coReq:'Clock-out time required',
@@ -330,7 +335,7 @@ const T={
     newE:'Nueva Entrada',editE:'Editar Entrada',saveE:'Guardar',saveC:'Guardar Cambios',cancel:'Cancelar',
     date:'Fecha',hk:'Camarera',selHK:'— Seleccionar —',
     cInHB:'Entrada (Homebase)',cOutHB:'Salida (Homebase)',
-    rooms:'Habitaciones',bad:'Hab. Malas',deep:'Lim. Profunda',
+    rooms:'Habitaciones',bad:'Hab. Malas',deep:'Lim. Profunda',pubArea:'Área Pública',notesLabel:'Notas',
     rating:'Calificación',sat:'Satisfactorio',uns:'Insatisfactorio',trn:'Necesita Capacitación',
     expE:'Salida Esperada',var:'Varianza',
     dateReq:'Fecha y camarera requeridas',coReq:'Hora de salida requerida',
@@ -369,7 +374,7 @@ let pendingAction=null; // for PIN-gated edit/delete
 
 function t(k){return T[lang][k]||k;}
 function h(){return HOTELS[hotel];}
-function ef(){return{date:'',name:'',k1kn_cosolc:0,k1kn_so:0,k2qn_cosolc:0,k2qn_so:0,o1kn_cosolc:0,o1kn_so:0,so_full_service:0,bad_rooms:0,deep_cleans:0,clock_in:'8:30 AM',clock_out:'',rating:''};}
+function ef(){return{date:'',name:'',k1kn_cosolc:0,k1kn_so:0,k2qn_cosolc:0,k2qn_so:0,o1kn_cosolc:0,o1kn_so:0,so_full_service:0,queen_1br_cosolc:0,queen_1br_so:0,bad_rooms:0,deep_cleans:0,public_area:0,clock_in:'8:30 AM',clock_out:'',rating:'',notes:''};}
 
 // ── Supabase ──────────────────────────────────────────────────────────────────
 async function api(path,opts={}){
@@ -709,6 +714,7 @@ function rLog(el){
         <div class="ti"><span class="tl">${t('actOut')}</span><span class="tv" style="color:${col}">${r.clock_out||'—'}</span></div>
       </div>`:''}
       <div class="rms">${cfg.rooms.filter(rm=>r[rm.k]>0).map(rm=>`<span class="rt">${lang==='es'?rm.le:rm.l} <span>${r[rm.k]}</span></span>`).join('')}</div>
+      ${r.notes?`<div style="margin-top:8px;padding:8px 10px;background:#f8f9fc;border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--text2);line-height:1.5"><span style="font-weight:600;color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.06em">${lang==='es'?'Notas':'Notes'}: </span>${r.notes}</div>`:''}
       <div class="ca">
         <button class="ab" onclick="reqEdit('${r.id}')">${t('edit')}</button>
         <button class="ab" onclick="reqDelete('${r.id}')">${t('del')}</button>
@@ -781,6 +787,10 @@ function rEntry(el){
       <button class="ropt uns" id="r_uns">${t('uns')}</button>
       <button class="ropt trn" id="r_trn">${t('trn')}</button>
     </div>
+    <div class="sdiv">\${t('notesLabel')}</div>
+    <div class="field">
+      <textarea class="fi" id="entry_notes" rows="3" placeholder="\${lang==='es'?'Notas opcionales...':'Optional notes about this shift...'}" style="resize:vertical;min-height:80px;font-family:var(--font);line-height:1.5">\${form.notes||''}</textarea>
+    </div>
     <div style="margin-top:16px">
       <button class="btn btnp" id="btn_save">${editId?t('saveC'):t('saveE')}</button>
       <button class="btn btns" id="btn_cancel">${t('cancel')}</button>
@@ -841,6 +851,11 @@ function rEntry(el){
 
   const saveEl=document.getElementById('btn_save');
   const cancelEl=document.getElementById('btn_cancel');
+  const notesEl=document.getElementById('entry_notes');
+  if(notesEl){
+    notesEl.addEventListener('input',e=>{form.notes=e.target.value;});
+    notesEl.addEventListener('change',e=>{form.notes=e.target.value;});
+  }
   if(saveEl) saveEl.addEventListener('click',saveRec);
   if(cancelEl) cancelEl.addEventListener('click',cancelEdit);
 
@@ -1060,11 +1075,13 @@ function expOwnerAll(){
 function expCSV(rows,filename,hcode){
   if(!rows.length)return toast('No data',false);
   const cfg=hcode?HOTELS[hcode]:HOTELS['WKFCW'];
-  const hdrs=['Date','Name','Hotel',...cfg.rooms.map(r=>r.l),'Clock In','Clock Out','Exp Min','Act Min','Variance Min','Rating'];
+  const hdrs=['Date','Name','Hotel',...cfg.rooms.map(r=>r.l),'Clock In','Clock Out','Exp Min','Act Min','Variance Min','Rating','Notes'];
   const lines=[hdrs.join(',')];
   rows.forEach(r=>{
     const v=calcV(r,r.hotel_code||hcode);
-    lines.push([r.date,r.name,r.hotel_code,...cfg.rooms.map(rm=>r[rm.k]||0),r.clock_in||'',r.clock_out||'',v?v.em:'',v?v.am:'',v?v.vm:'',r.rating||''].join(','));
+    const notes=(r.notes||'').replace(/,/g,' ').replace(/
+/g,' ');
+    lines.push([r.date,r.name,r.hotel_code,...cfg.rooms.map(rm=>r[rm.k]||0),r.clock_in||'',r.clock_out||'',v?v.em:'',v?v.am:'',v?v.vm:'',r.rating||'',notes].join(','));
   });
   const blob=new Blob([lines.join('\n')],{type:'text/csv'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;a.click();

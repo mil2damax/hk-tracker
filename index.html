@@ -787,9 +787,9 @@ function rEntry(el){
       <button class="ropt uns" id="r_uns">${t('uns')}</button>
       <button class="ropt trn" id="r_trn">${t('trn')}</button>
     </div>
-    <div class="sdiv">\${t('notesLabel')}</div>
+    <div class="sdiv">${t('notesLabel')}</div>
     <div class="field">
-      <textarea class="fi" id="entry_notes" rows="3" placeholder="\${lang==='es'?'Notas opcionales...':'Optional notes about this shift...'}" style="resize:vertical;min-height:80px;font-family:var(--font);line-height:1.5">\${form.notes||''}</textarea>
+      <textarea class="fi" id="entry_notes" rows="3" placeholder="${lang==='es'?'Notas opcionales...':'Optional notes about this shift...'}" style="resize:vertical;min-height:80px;font-family:var(--font);line-height:1.5">${form.notes||''}</textarea>
     </div>
     <div style="margin-top:16px">
       <button class="btn btnp" id="btn_save">${editId?t('saveC'):t('saveE')}</button>
@@ -1079,8 +1079,7 @@ function expCSV(rows,filename,hcode){
   const lines=[hdrs.join(',')];
   rows.forEach(r=>{
     const v=calcV(r,r.hotel_code||hcode);
-    const notes=(r.notes||'').replace(/,/g,' ').replace(/
-/g,' ');
+    const notes=(r.notes||'').replace(/,/g,' ').replace(/\n/g,' ');
     lines.push([r.date,r.name,r.hotel_code,...cfg.rooms.map(rm=>r[rm.k]||0),r.clock_in||'',r.clock_out||'',v?v.em:'',v?v.am:'',v?v.vm:'',r.rating||'',notes].join(','));
   });
   const blob=new Blob([lines.join('\n')],{type:'text/csv'});

@@ -313,7 +313,7 @@ const T={
     shifts:'Shifts',rms:'Rooms',avgV:'Avg Variance',
     perfTitle:'Staff Performance',avgR:'Avg Rooms',
     onT:'on time',ov:'over',ear:'early',noData:'No data for this period',
-    expDay:'⬇ Export Day CSV',expAll:'⬇ Export All CSV',
+    expDay:'⬇ Export Day CSV',expAll:'⬇ Export All CSV',expRange:'⬇ Export Date Range CSV',expFrom:'From',expTo:'To',
     pinReq:'PIN Required',pinSub:'Enter manager PIN to continue.',
     unlock:'Unlock',pcancel:'Cancel',wrong:'Incorrect PIN',
     staffList:'Staff List',addN:'Staff name...',add:'+ Add',
@@ -346,7 +346,7 @@ const T={
     shifts:'Turnos',rms:'Habitaciones',avgV:'Varianza Prom',
     perfTitle:'Desempeño del Personal',avgR:'Hab. Promedio',
     onT:'a tiempo',ov:'excedido',ear:'anticipado',noData:'Sin datos para este período',
-    expDay:'⬇ Exportar Día CSV',expAll:'⬇ Exportar Todo CSV',
+    expDay:'⬇ Exportar Día CSV',expAll:'⬇ Exportar Todo CSV',expRange:'⬇ Exportar Rango de Fechas CSV',expFrom:'Desde',expTo:'Hasta',
     pinReq:'PIN Requerido',pinSub:'Ingrese el PIN del gerente.',
     unlock:'Desbloquear',pcancel:'Cancelar',wrong:'PIN incorrecto',
     staffList:'Lista de Personal',addN:'Nombre...',add:'+ Agregar',
@@ -370,6 +370,7 @@ let aRange='week',oDrill=null;
 let newName='',setUnlocked=false,toastT=null;
 let form=ef();
 let tpField=null,tpBtn=null,tpH=8,tpM=30,tpAP='AM';
+let exportFrom='',exportTo='';
 let pendingAction=null; // for PIN-gated edit/delete
 
 function t(k){return T[lang][k]||k;}
@@ -672,7 +673,9 @@ function render(){
 // ── LOG ───────────────────────────────────────────────────────────────────────
 function rLog(el){
   const dd=fDate||new Date().toISOString().slice(0,10);
-  const filtered=recs.filter(r=>r.hotel_code===hotel&&(!fDate||r.date===fDate)&&(fName==='All'||r.name===fName));
+  const filtered=recs
+    .filter(r=>r.hotel_code===hotel&&(!fDate||r.date===fDate)&&(fName==='All'||r.name===fName))
+    .sort((a,b)=>b.date.localeCompare(a.date)||a.name.localeCompare(b.name));
   const dt=dtMap[dd];const cfg=h();
   let html=`<div class="fr">
     <input type="date" value="${fDate}" onchange="fDate=this.value;render()"/>
@@ -908,6 +911,20 @@ function rAnalytics(el){
   </div>
   <button class="ebtn" onclick="expDay()">${t('expDay')}</button>
   <button class="ebtn" onclick="expAll()">${t('expAll')}</button>
+  <div style="background:#f8f9fc;border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px">
+    <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">${t('expRange')}</div>
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+      <div style="flex:1">
+        <label style="font-size:10px;color:var(--text3);font-weight:600;display:block;margin-bottom:3px">${t('expFrom')}</label>
+        <input type="date" id="expFromDate" value="${exportFrom}" onchange="exportFrom=this.value" style="width:100%;background:white;border:1px solid var(--border);border-radius:8px;color:var(--text);padding:8px 10px;font-size:13px;font-family:var(--font);outline:none"/>
+      </div>
+      <div style="flex:1">
+        <label style="font-size:10px;color:var(--text3);font-weight:600;display:block;margin-bottom:3px">${t('expTo')}</label>
+        <input type="date" id="expToDate" value="${exportTo}" onchange="exportTo=this.value" style="width:100%;background:white;border:1px solid var(--border);border-radius:8px;color:var(--text);padding:8px 10px;font-size:13px;font-family:var(--font);outline:none"/>
+      </div>
+    </div>
+    <button class="ebtn" style="margin-bottom:0" onclick="expDateRange()">${t('expRange')}</button>
+  </div>
   <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">${t('perfTitle')}</div>`;
   if(!names.length)html+=`<div class="empty"><div class="ei">📊</div>${t('noData')}</div>`;
   else names.forEach(n=>html+=staffCard(n,rf,hotel));
@@ -1061,6 +1078,16 @@ function rSettings(el){
 }
 
 // ── Export ────────────────────────────────────────────────────────────────────
+function expDateRange(){
+  const from=document.getElementById('expFromDate')?.value||exportFrom;
+  const to=document.getElementById('expToDate')?.value||exportTo;
+  if(!from||!to)return toast('Please select both From and To dates',false);
+  if(from>to)return toast('From date must be before To date',false);
+  const rows=recs.filter(r=>r.hotel_code===hotel&&r.date>=from&&r.date<=to);
+  if(!rows.length)return toast('No entries found for this date range',false);
+  expCSV(rows,`hk-${hotel}-${from}-to-${to}.csv`,hotel);
+}
+
 function expDay(){
   const d=fDate||new Date().toISOString().slice(0,10);
   expCSV(recs.filter(r=>r.date===d&&r.hotel_code===hotel),`hk-${hotel}-${d}.csv`,hotel);

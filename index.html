@@ -47,7 +47,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:15
 /* Topbar */
 .topbar{background:var(--topbar);border-bottom:none;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.3)}
 .topbar-left{display:flex;align-items:center;gap:10px}
-.hotel-badge{padding:3px 10px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:.08em;cursor:pointer;border:1px solid rgba(181,134,42,.4);font-family:var(--mono);background:rgba(181,134,42,.15);color:#e8d5a3}
+.hotel-badge{padding:4px 12px;border-radius:4px;font-size:11px;font-weight:700;letter-spacing:.1em;cursor:pointer;border:1px solid rgba(181,134,42,.4);font-family:var(--mono);background:rgba(181,134,42,.15);color:#e8d5a3;text-align:center}
 .topbar-title{font-size:18px;font-weight:700;letter-spacing:.5px;font-family:var(--serif);color:#e8d5a3}
 .topbar-sub{font-size:11px;color:#8a8070;font-family:var(--mono);margin-top:1px}
 .topbar-right{display:flex;align-items:center;gap:5px}
@@ -229,13 +229,13 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
 <div id="app">
   <div class="topbar">
     <div class="topbar-left">
-      <div class="tack-logo" onclick="showHotelSelector()" style="display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none">
+      <button class="hotel-badge" id="hotelBadge" onclick="showHotelSelector()">—</button>
+      <div class="tack-logo" onclick="showHotelSelector()" style="display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none">
         <div style="display:flex;flex-direction:column;gap:0">
           <div class="topbar-title" id="appTitle">Tack</div>
           <div class="topbar-sub" id="headerSub">Milkam Hospitality</div>
         </div>
       </div>
-      <button class="hotel-badge" id="hotelBadge" onclick="showHotelSelector()" style="display:none">—</button>
     </div>
     <div class="topbar-right">
       <button class="lang-btn active" id="btnEN" onclick="setLang('en')">EN</button>
@@ -317,7 +317,7 @@ const T={
     saved:'Entry saved ✓',updated:'Entry updated ✓',deleted:'Deleted',
     confDel:'Delete this entry?',confEdit:'Edit requires manager PIN',
     dtSave:'Save Totals',dtSaved:'Totals saved ✓',
-    tod:'Today',l7:'Last 7d',mon:'This Month',all:'All Time',
+    tod:'Today',l7:'Last 7d',mon:'This Month',yr:'This Year',
     shifts:'Shifts',rms:'Rooms',avgV:'Avg Variance',
     perfTitle:'Staff Performance',avgR:'Avg Rooms',
     onT:'on time',ov:'over',ear:'early',noData:'No data for this period',
@@ -350,7 +350,7 @@ const T={
     saved:'Entrada guardada ✓',updated:'Entrada actualizada ✓',deleted:'Eliminado',
     confDel:'¿Eliminar esta entrada?',confEdit:'Se requiere PIN del gerente',
     dtSave:'Guardar',dtSaved:'Totales guardados ✓',
-    tod:'Hoy',l7:'Últimos 7d',mon:'Este Mes',all:'Todo',
+    tod:'Hoy',l7:'Últimos 7d',mon:'Este Mes',yr:'Este Año',
     shifts:'Turnos',rms:'Habitaciones',avgV:'Varianza Prom',
     perfTitle:'Desempeño del Personal',avgR:'Hab. Promedio',
     onT:'a tiempo',ov:'excedido',ear:'anticipado',noData:'Sin datos para este período',
@@ -567,11 +567,11 @@ function updUI(){
   const title=document.getElementById('appTitle');
   title.textContent='Tack';
   if(isOwner){
-    if(badge){badge.textContent='OWNER';badge.style.display='inline-flex';badge.style.background='rgba(181,134,42,.2)';badge.style.color='#e8d5a3';}
+    if(badge){badge.textContent='OWNER';badge.style.background='rgba(181,134,42,.2)';badge.style.color='#e8d5a3';}
     if(sub) sub.textContent='All Properties';
   }else if(hotel){
     const hh=HOTELS[hotel];
-    if(badge){badge.textContent=hotel;badge.style.display='inline-flex';badge.style.background=hh.color+'22';badge.style.color=hh.color;}
+    if(badge){badge.textContent=hotel;badge.style.background=hh.color+'22';badge.style.color=hh.color;}
     if(sub) sub.textContent=hh.name;
   }
 }
@@ -671,7 +671,12 @@ function render(){
     return;
   }
   const sub=document.getElementById('headerSub');
-  if(sub)sub.textContent=loading?t('sync'):`${recs.filter(r=>r.hotel_code===hotel).length} ${t('ents')} · ${staff.length} ${t('stf')}`;
+  if(isOwner){
+    const totalStaff=[...new Set(recs.map(r=>r.name))].length;
+    if(sub)sub.textContent=loading?t('sync'):`${recs.length} ${t('ents')} · ${HCODES.length} ${lang==='es'?'propiedades':'properties'}`;
+  } else {
+    if(sub)sub.textContent=loading?t('sync'):`${recs.filter(r=>r.hotel_code===hotel).length} ${t('ents')} · ${staff.length} ${t('stf')}`;
+  }
   const c=document.getElementById('content');if(!c)return;
   if(loading&&recs.length===0){c.innerHTML=`<div class="loader"><div class="spinner"></div>${t('loading')}</div>`;return;}
   if(tab==='log')rLog(c);
@@ -905,13 +910,14 @@ function rAnalytics(el){
     if(aRange==='day')return r.date===today;
     if(aRange==='week')return diff>=0&&diff<7;
     if(aRange==='month')return r.date.slice(0,7)===today.slice(0,7);
-    return true;
+    if(aRange==='yr')return r.date.slice(0,4)===today.slice(0,4);
+    return false;
   });
   const wv=rf.map(r=>({...r,_v:calcV(r,hotel)})).filter(r=>r._v);
   const avgV=wv.length?Math.round(wv.reduce((s,r)=>s+r._v.vm,0)/wv.length):0;
   const names=[...new Set(rf.map(r=>r.name))].sort();
   let html=`<div class="pills">
-    ${[['day',t('tod')],['week',t('l7')],['month',t('mon')],['all',t('all')]].map(([v,l])=>
+    ${[['day',t('tod')],['week',t('l7')],['month',t('mon')],['yr',t('yr')]].map(([v,l])=>
       `<button class="pill ${aRange===v?'active':''}" onclick="aRange='${v}';render()">${l}</button>`).join('')}
   </div>
   <div class="sg">
@@ -984,7 +990,8 @@ function rOwner(el){
       if(aRange==='day')return r.date===today;
       if(aRange==='week')return diff>=0&&diff<7;
       if(aRange==='month')return r.date.slice(0,7)===today.slice(0,7);
-      return true;
+      if(aRange==='yr')return r.date.slice(0,4)===today.slice(0,4);
+      return false;
     });
   }
 
@@ -996,7 +1003,7 @@ function rOwner(el){
     let html=`<button class="drill-back" onclick="oDrill=null;render()">← ${t('backTo')} ${t('comparison')}</button>
     <div style="font-size:13px;font-weight:700;margin-bottom:12px;color:${hh.color}">${hh.name}</div>
     <div class="pills">
-      ${[['day',t('tod')],['week',t('l7')],['month',t('mon')],['all',t('all')]].map(([v,l])=>
+      ${[['day',t('tod')],['week',t('l7')],['month',t('mon')],['yr',t('yr')]].map(([v,l])=>
         `<button class="pill ${aRange===v?'active':''}" onclick="aRange='${v}';render()">${l}</button>`).join('')}
     </div>`;
     if(!names.length)html+=`<div class="empty">${t('noData')}</div>`;
@@ -1011,7 +1018,7 @@ function rOwner(el){
 
   let html=`<div style="font-size:11px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">${t('portfolio')}</div>
   <div class="pills">
-    ${[['day',t('tod')],['week',t('l7')],['month',t('mon')],['all',t('all')]].map(([v,l])=>
+    ${[['day',t('tod')],['week',t('l7')],['month',t('mon')],['yr',t('yr')]].map(([v,l])=>
       `<button class="pill ${aRange===v?'active':''}" onclick="aRange='${v}';render()">${l}</button>`).join('')}
   </div>
   <div class="sg">

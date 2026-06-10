@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
-<meta name="apple-mobile-web-app-title" content="HK Tracker"/>
+<meta name="apple-mobile-web-app-title" content="Tack"/>
 <meta name="theme-color" content="#2563eb"/>
-<title>HK Tracker</title>
+<title>Tack</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -228,7 +228,7 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
     <div class="topbar-left">
       <button class="hotel-badge" id="hotelBadge" onclick="showHotelSelector()">—</button>
       <div>
-        <div class="topbar-title" id="appTitle">HK Tracker</div>
+        <div class="topbar-title" id="appTitle">Tack</div>
         <div class="topbar-sub" id="headerSub">Select a hotel</div>
       </div>
     </div>
@@ -558,7 +558,7 @@ function updUI(){
   const title=document.getElementById('appTitle');
   if(isOwner){
     badge.textContent='OWNER';badge.style.background='rgba(155,127,232,.2)';badge.style.color='var(--purple)';
-    title.textContent='HK Tracker';
+    title.textContent='Tack';
   }else if(hotel){
     const hh=HOTELS[hotel];
     badge.textContent=hotel;badge.style.background=hh.color+'22';badge.style.color=hh.color;

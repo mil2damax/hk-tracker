@@ -254,10 +254,10 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
 // ── Config ────────────────────────────────────────────────────────────────────
 const SB='https://prhsllifpfacvdlttyuf.supabase.co';
 const SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InByaHNsbGlmcGZhY3ZkbHR0eXVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4MTIxMTEsImV4cCI6MjA5MjM4ODExMX0._L65_b255yRPZ5d1A0i4rtcLO8NxmnokAwQ4grCMytk';
-const OWNER_PIN=atob('MzczNw==');
+// PINs verified server-side via verify_pin RPC
 
 const HOTELS={
-  WKFCW:{name:'Candlewood Suites Wake Forest',short:'Candlewood',pin:atob('MjAxMQ=='),color:'#4f8ef7',
+  WKFCW:{name:'Candlewood Suites Wake Forest',short:'Candlewood',color:'#4f8ef7',
     rooms:[
       {k:'k1kn_cosolc',l:'K1KN CO/SOLC',le:'K1KN CO/SOLC',m:30},
       {k:'k1kn_so',l:'K1KN SO',le:'K1KN SO',m:15},
@@ -270,7 +270,7 @@ const HOTELS={
       {k:'public_area',l:'Public Area',le:'Área Pública',m:30},
       {k:'pet',l:'Pet',le:'Mascota',m:40},
     ],oh:50},
-  RDURM:{name:'Tru by Hilton Wake Forest',short:'Tru WF',pin:atob('MjAyMw=='),color:'#2ecc8a',
+  RDURM:{name:'Tru by Hilton Wake Forest',short:'Tru WF',color:'#2ecc8a',
     rooms:[
       {k:'k1kn_cosolc',l:'King CO/SOLC',le:'King CO/SOLC',m:25},
       {k:'k1kn_so',l:'King SO',le:'King SO',m:12},
@@ -281,7 +281,7 @@ const HOTELS={
       {k:'public_area',l:'Public Area',le:'Área Pública',m:30},
       {k:'pet',l:'Pet',le:'Mascota',m:40},
     ],oh:50},
-  RDUTT:{name:'Home2 Suites Raleigh North',short:'Home2 RAL',pin:atob('MjAyMQ=='),color:'#ffb03a',
+  RDUTT:{name:'Home2 Suites Raleigh North',short:'Home2 RAL',color:'#ffb03a',
     rooms:[
       {k:'k1kn_cosolc',l:'King Studio CO/SOLC',le:'King Studio CO/SOLC',m:30},
       {k:'k1kn_so',l:'King Studio SO',le:'King Studio SO',m:15},
@@ -378,14 +378,30 @@ let aRange='week',oDrill=null;
 let newName='',setUnlocked=false,toastT=null;
 let form=ef();
 let tpField=null,tpBtn=null,tpH=8,tpM=30,tpAP='AM';
+// Session state - set after server-side PIN verification
+let session={role:null,hotel:null}; // role: 'hk'|'gm'|'owner'
 let exportFrom='',exportTo='';
 let pendingAction=null; // for PIN-gated edit/delete
 
 function t(k){return T[lang][k]||k;}
 function h(){return HOTELS[hotel];}
-function ef(){return{date:'',name:'',k1kn_cosolc:0,k1kn_so:0,k2qn_cosolc:0,k2qn_so:0,o1kn_cosolc:0,o1kn_so:0,so_full_service:0,queen_1br_cosolc:0,queen_1br_so:0,bad_rooms:0,deep_cleans:0,public_area:0,pet:0,clock_in:'8:30 AM',clock_out:'',rating:'',notes:''};}
+function ef(){return{date:'',name:'',k1kn_cosolc:0,k1kn_so:0,k2qn_cosolc:0,k2qn_so:0,o1kn_cosolc:0,o1kn_so:0,so_full_service:0,queen_1br_cosolc:0,queen_1br_so:0,bad_rooms:0,deep_cleans:0,public_area:0,pet:0,gm_reviewed:false,clock_in:'8:30 AM',clock_out:'',rating:'',notes:''};}
 
 // ── Supabase ──────────────────────────────────────────────────────────────────
+async function verifyPin(pin){
+  try{
+    const res=await fetch(`${SB}/rest/v1/rpc/verify_pin`,{
+      method:'POST',
+      headers:{'apikey':SK,'Authorization':`Bearer ${SK}`,'Content-Type':'application/json'},
+      body:JSON.stringify({p_pin:pin})
+    });
+    if(!res.ok) return {success:false,error:'Server error'};
+    return await res.json();
+  }catch(e){
+    return {success:false,error:'Connection error'};
+  }
+}
+
 async function api(path,opts={}){
   const url=path.startsWith('http')?path:`${SB}/rest/v1/${path}`;
   const res=await fetch(url,{...opts,headers:{'apikey':SK,'Authorization':`Bearer ${SK}`,'Content-Type':'application/json','Prefer':opts.prefer||'',...(opts.headers||{})}});
@@ -418,6 +434,7 @@ async function loadAll(){
 async function saveRec(){
   if(!form.date||!form.name)return toast(t('dateReq'),false);
   if(!form.clock_out.trim())return toast(t('coReq'),false);
+
   try{
     const p={...form,hotel_code:hotel};
     if(editId){
@@ -538,7 +555,7 @@ function showHotelSelector(){
     </button>`;}).join('')}
     <button class="ho" onclick="pickOwner()" style="border-color:var(--purple)33;margin-top:5px">
       <div style="width:10px;height:10px;border-radius:50%;background:var(--purple);flex-shrink:0"></div>
-      <div><div>Owner View</div><div class="hoc">All Properties · PIN ${OWNER_PIN.replace(/./g,'•')}</div></div>
+      <div><div>Owner View</div><div class="hoc">All Properties</div></div>
     </button>
   </div>`;
   document.body.appendChild(o);
@@ -546,12 +563,13 @@ function showHotelSelector(){
 
 function pickHotel(code){
   closeOv();
-  showPin(HOTELS[code].pin,()=>{setHotel(code);},'hotel',code);
+  showPin(null,()=>{setHotel(code);},'hotel',code);
 }
 function pickOwner(){
   closeOv();
-  showPin(OWNER_PIN,()=>{
-    hotel='WKFCW';isOwner=true;setUnlocked=false;oDrill=null;
+  showPin(null,()=>{
+    hotel=session.hotel==='ALL'?'WKFCW':session.hotel;
+    isOwner=true;setUnlocked=false;oDrill=null;
     updUI();loadAll();switchTab('analytics');
   },'owner');
 }
@@ -578,6 +596,7 @@ function updUI(){
 
 // ── PIN overlay ───────────────────────────────────────────────────────────────
 function showPin(expected,onOk,ctx,hcode){
+  // 'expected' param kept for API compatibility but not used - server verifies
   closeOv();
   const o=document.createElement('div');o.className='ov';o.id='pinOv';
   const htl=hcode&&HOTELS[hcode]?HOTELS[hcode]:null;
@@ -585,42 +604,105 @@ function showPin(expected,onOk,ctx,hcode){
   o.innerHTML=`<div class="ob" style="width:280px;text-align:center">
     <div class="ot">${t('pinReq')}</div>
     <div class="os">${sub}<br>${t('pinSub')}</div>
-    <input class="pi" id="pinI" type="password" maxlength="4" inputmode="numeric"
-      onkeydown="if(event.key==='Enter')chkPin('${expected}')"/>
+    <input class="pi" id="pinI" type="password" maxlength="4" inputmode="numeric"/>
     <div class="pe" id="pinE"></div>
-    <button class="pb" onclick="chkPin('${expected}')">${t('unlock')}</button>
+    <button class="pb" id="pinBtn">${t('unlock')}</button>
     <button class="pc" onclick="closeOv()">${t('pcancel')}</button>
   </div>`;
   o._ok=onOk;
+  o._ctx=ctx;
+  o._hcode=hcode;
   document.body.appendChild(o);
-  setTimeout(()=>document.getElementById('pinI')?.focus(),100);
+  const pinI=document.getElementById('pinI');
+  const pinBtn=document.getElementById('pinBtn');
+  if(pinI){
+    pinI.addEventListener('keydown',e=>{if(e.key==='Enter')chkPin();});
+    setTimeout(()=>pinI.focus(),100);
+  }
+  if(pinBtn) pinBtn.addEventListener('click',chkPin);
 }
-function chkPin(exp){
-  const v=document.getElementById('pinI')?.value;
-  if(v===exp){const o=document.getElementById('pinOv');const cb=o?o._ok:null;closeOv();if(cb)cb();}
-  else{const e=document.getElementById('pinE');if(e)e.textContent=t('wrong');}
+
+async function chkPin(){
+  const pinI=document.getElementById('pinI');
+  const pinE=document.getElementById('pinE');
+  const o=document.getElementById('pinOv');
+  if(!pinI||!o)return;
+  const val=pinI.value.trim();
+  if(!val){if(pinE)pinE.textContent=t('wrong');return;}
+  // Disable input during verification
+  pinI.disabled=true;
+  const btn=document.getElementById('pinBtn');
+  if(btn){btn.disabled=true;btn.textContent='...';}
+  const result=await verifyPin(val);
+  if(result&&result.success){
+    // Store session
+    session={role:result.role,hotel:result.hotel};
+    const cb=o._ok;
+    const ctx=o._ctx;
+    // For hotel access, verify hotel matches
+    if(ctx==='hotel'&&o._hcode&&result.hotel!==o._hcode&&result.role!=='owner'){
+      if(pinE)pinE.textContent=t('wrong');
+      pinI.disabled=false;
+      if(btn){btn.disabled=false;btn.textContent=t('unlock');}
+      return;
+    }
+    closeOv();
+    if(cb)cb();
+  }else{
+    if(pinE)pinE.textContent=t('wrong');
+    pinI.disabled=false;
+    if(btn){btn.disabled=false;btn.textContent=t('unlock');}
+    pinI.value='';
+    pinI.focus();
+  }
 }
 function closeOv(){['hotelOv','pinOv','dtOv'].forEach(id=>document.getElementById(id)?.remove());}
 
 // ── Edit / Delete with PIN gate ───────────────────────────────────────────────
 function reqEdit(id){
-  showPin(HOTELS[hotel].pin,()=>{
+  if(session.role==='gm'||session.role==='owner'){
     const r=recs.find(x=>x.id===id);if(!r)return;
     editId=id;form={...r,clock_in:r.clock_in||'8:30 AM'};
     switchTab('entry');
-  },'edit',hotel);
+  } else {
+    showPin(null,()=>{
+      if(session.role==='gm'||session.role==='owner'){
+        const r=recs.find(x=>x.id===id);if(!r)return;
+        editId=id;form={...r,clock_in:r.clock_in||'8:30 AM'};
+        switchTab('entry');
+      } else {
+        toast(lang==='es'?'Se requiere PIN del gerente':'GM PIN required',false);
+      }
+    },'edit',hotel);
+  }
 }
 function reqDelete(id){
-  showPin(HOTELS[hotel].pin,()=>{
+  if(session.role==='gm'||session.role==='owner'){
     if(!confirm(t('confDel')))return;
     doDelete(id);
-  },'edit',hotel);
+  } else {
+    showPin(null,()=>{
+      if(session.role==='gm'||session.role==='owner'){
+        if(!confirm(t('confDel')))return;
+        doDelete(id);
+      } else {
+        toast(lang==='es'?'Se requiere PIN del gerente':'GM PIN required',false);
+      }
+    },'edit',hotel);
+  }
 }
 
 // ── Tab ───────────────────────────────────────────────────────────────────────
 function switchTab(t2){
   if(t2==='settings'&&!setUnlocked){
-    showPin(isOwner?OWNER_PIN:HOTELS[hotel]?.pin,()=>{setUnlocked=true;tab='settings';syncTabUI();render();},'edit',hotel);
+    // Only GM or owner can access settings
+    showPin(null,()=>{
+      if(session.role==='gm'||session.role==='owner'){
+        setUnlocked=true;tab='settings';syncTabUI();render();
+      } else {
+        toast(lang==='es'?'Solo el gerente puede acceder a la configuración':'Settings require GM access',false);
+      }
+    },'edit',hotel);
     return;
   }
   tab=t2;syncTabUI();render();
@@ -732,6 +814,10 @@ function rLog(el){
         <div class="ti"><span class="tl">${t('actOut')}</span><span class="tv" style="color:${col}">${r.clock_out||'—'}</span></div>
       </div>`:''}
       <div class="rms">${cfg.rooms.filter(rm=>r[rm.k]>0).map(rm=>`<span class="rt">${lang==='es'?rm.le:rm.l} <span>${r[rm.k]}</span></span>`).join('')}</div>
+      ${(r.pet>0||r.bad_rooms>0||r.deep_cleans>0||r.public_area>0)?`
+        <div style="display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:5px;font-size:10px;font-weight:600;margin-bottom:6px;${r.gm_reviewed?'background:#dcfce7;color:#166534;border:1px solid #bbf7d0':'background:#fef3c7;color:#92400e;border:1px solid #fcd34d'}">
+          ${r.gm_reviewed?(lang==='es'?'✓ GM Revisó':'✓ GM Reviewed'):(lang==='es'?'⏳ Pendiente Revisión GM':'⏳ Pending GM Review')}
+        </div>`:''}
       ${r.notes?`<div style="margin-top:8px;padding:8px 10px;background:#faf6ef;border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--text2);line-height:1.5"><span style="font-weight:600;color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.06em">${t('notesLabel')}: </span>${r.notes}</div>`:''}
       <div class="ca">
         <button class="ab" onclick="reqEdit('${r.id}')">${t('edit')}</button>
@@ -767,10 +853,18 @@ function showDTForm(date){
 function rEntry(el){
   const cfg=h();
   // Build form HTML
-  const roomInputs=cfg.rooms.map((rm,ri)=>`
+  const specialKeys=['pet','bad_rooms','deep_cleans','public_area'];
+  const standardRooms=cfg.rooms.filter(rm=>!specialKeys.includes(rm.k));
+  const specialRooms=cfg.rooms.filter(rm=>specialKeys.includes(rm.k));
+  const standardRoomInputs=standardRooms.map((rm,ri)=>`
     <div class="field">
       <label class="fl">${lang==='es'?rm.le:rm.l}</label>
       <input type="number" class="fi" style="text-align:center" id="rm_${ri}" value="${form[rm.k]||0}" min="0"/>
+    </div>`).join('');
+  const specialRoomInputs=specialRooms.map((rm,ri)=>`
+    <div class="field">
+      <label class="fl">${lang==='es'?rm.le:rm.l}</label>
+      <input type="number" class="fi" style="text-align:center" id="sp_${ri}" value="${form[rm.k]||0}" min="0"/>
     </div>`).join('');
 
   const staffOpts=staff.map(n=>`<option value="${n}">${n}</option>`).join('');
@@ -798,7 +892,30 @@ function rEntry(el){
       <div class="vi"><span class="vl">${t('var')}</span><span class="vv" id="vVar">—</span></div>
     </div>
     <div class="sdiv">${t('rooms')}</div>
-    <div class="g4">${roomInputs}</div>
+    <div class="g4">${standardRoomInputs}</div>
+    <div style="background:#fffbeb;border:1.5px solid #f59e0b;border-radius:10px;padding:14px;margin:10px 0">
+      <div style="font-size:11px;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">
+        ${lang==='es'?'Requiere Revisión del Gerente':'Requires GM Review'}
+      </div>
+      <div style="font-size:11px;color:#78350f;margin-bottom:12px;line-height:1.5">
+        ${lang==='es'?'Ingrese los números a continuación según corresponda. El Gerente debe revisar y confirmar antes de finalizar el día.':'Enter counts below as applicable. The GM must review and confirm before finalizing the day.'}
+      </div>
+      <div class="g4">${specialRoomInputs}</div>
+      <div style="margin-top:12px;padding-top:10px;border-top:1px solid #fcd34d;display:flex;align-items:center;gap:10px">
+        <div id="gmReviewBox" style="width:22px;height:22px;border-radius:5px;border:2px solid ${form.gm_reviewed?'#16a34a':'#d97706'};background:${form.gm_reviewed?'#16a34a':'transparent'};cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s">
+          ${form.gm_reviewed?'<span style="color:white;font-size:14px;font-weight:700">✓</span>':''}
+        </div>
+        <div style="font-size:12px;color:#78350f;line-height:1.4">
+          <strong>${lang==='es'?'GM Revisó':'GM Reviewed'}</strong><br/>
+          <span style="font-size:11px;color:#92400e">${lang==='es'?'El gerente confirmó los números anteriores':'Manager confirmed the above counts'}</span>
+        </div>
+      </div>
+    </div>
+    ${(form.pet>0||form.bad_rooms>0||form.deep_cleans>0)&&session.role!=='gm'&&session.role!=='owner'?`
+    <div style="background:#fef3c7;border:1px solid #f59e0b;border-radius:8px;padding:10px 12px;margin:8px 0;font-size:12px;color:#92400e;line-height:1.5">
+      <strong style="display:block;margin-bottom:2px">${lang==='es'?'⚠️ Aprobación del Gerente Requerida':'⚠️ GM Approval Required'}</strong>
+      ${lang==='es'?'Pet, Habitaciones Malas y Limpiezas Profundas deben ser aprobadas por el Gerente antes de guardar.':'Pet, Bad Rooms, and Deep Cleans must be approved by the GM before saving.'}
+    </div>`:''}
     <div class="sdiv">${t('rating')}</div>
     <div class="rrow" id="rrow">
       <button class="ropt sat" id="r_sat">${t('sat')}</button>
@@ -851,7 +968,11 @@ function rEntry(el){
   if(ciEl) ciEl.addEventListener('click',()=>openTP('clock_in','ci_b'));
   if(coEl) coEl.addEventListener('click',()=>openTP('clock_out','co_b'));
 
-  cfg.rooms.forEach((rm,ri)=>{
+  // Wire standard room inputs
+  const specialKeys2=['pet','bad_rooms','deep_cleans','public_area'];
+  const stdRooms=cfg.rooms.filter(rm=>!specialKeys2.includes(rm.k));
+  const spcRooms=cfg.rooms.filter(rm=>specialKeys2.includes(rm.k));
+  stdRooms.forEach((rm,ri)=>{
     const el=document.getElementById('rm_'+ri);
     if(el){
       const handler=e=>{form[rm.k]=+e.target.value||0;uvp();};
@@ -859,6 +980,36 @@ function rEntry(el){
       el.addEventListener('change',handler);
     }
   });
+  // Wire special room inputs
+  spcRooms.forEach((rm,ri)=>{
+    const el=document.getElementById('sp_'+ri);
+    if(el){
+      const handler=e=>{form[rm.k]=+e.target.value||0;uvp();updateGMBox();};
+      el.addEventListener('input',handler);
+      el.addEventListener('change',handler);
+    }
+  });
+  // Wire GM review checkbox
+  const gmBox=document.getElementById('gmReviewBox');
+  if(gmBox){
+    gmBox.addEventListener('click',()=>{
+      const hasSpecial=form.pet>0||form.bad_rooms>0||form.deep_cleans>0||form.public_area>0;
+      if(!hasSpecial){toast(lang==='es'?'No hay items especiales que revisar':'No special items to review',false);return;}
+      if(!form.gm_reviewed){
+        // Requires GM PIN to check
+        showPin(null,()=>{
+          if(session.role==='gm'||session.role==='owner'){
+            form.gm_reviewed=true;updateGMBox();toast(lang==='es'?'GM revisó ✓':'GM reviewed ✓');
+          } else {
+            toast(lang==='es'?'Se requiere PIN del gerente':'GM PIN required',false);
+          }
+        },'edit',hotel);
+      } else {
+        // GM can uncheck
+        form.gm_reviewed=false;updateGMBox();
+      }
+    });
+  }
 
   const satEl=document.getElementById('r_sat');
   const unsEl=document.getElementById('r_uns');
@@ -884,6 +1035,15 @@ function rEntry(el){
 function setR(r){
   // Handled inside rEntry via addEventListener
 }
+function updateGMBox(){
+  const box=document.getElementById('gmReviewBox');
+  if(!box)return;
+  const reviewed=form.gm_reviewed;
+  box.style.borderColor=reviewed?'#16a34a':'#d97706';
+  box.style.background=reviewed?'#16a34a':'transparent';
+  box.innerHTML=reviewed?'<span style="color:white;font-size:14px;font-weight:700">✓</span>':'';
+}
+
 function uvp(){
   if(!hotel||!HOTELS[hotel])return;
   const em=expMin(form,hotel);

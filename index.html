@@ -530,7 +530,7 @@ function showHotelSelector(){
   closeOv();
   const o=document.createElement('div');o.className='ov';o.id='hotelOv';
   o.innerHTML=`<div class="ob">
-    <div class="ot">🏨 ${t('sel')}</div>
+    <div class="ot">${t('sel')}</div>
     <div class="os">${t('selSub')}</div>
     ${HCODES.map(code=>{const hh=HOTELS[code];return`<button class="ho" onclick="pickHotel('${code}')" style="border-color:${hh.color}33">
       <div style="width:10px;height:10px;border-radius:50%;background:${hh.color};flex-shrink:0"></div>
@@ -666,7 +666,7 @@ function applyDesktopLayout(){
 
 function render(){
   if(!hotel){
-    document.getElementById('content').innerHTML=`<div class="empty"><div class="ei">🏨</div><div style="margin-bottom:12px">Select a hotel to get started</div><button class="btn btnp" style="max-width:200px;margin:0 auto" onclick="showHotelSelector()">Select Hotel</button></div>`;
+    document.getElementById('content').innerHTML=`<div class="empty"><div style="margin-bottom:12px">Select a hotel to get started</div><button class="btn btnp" style="max-width:200px;margin:0 auto" onclick="showHotelSelector()">Select Hotel</button></div>`;
     document.getElementById('headerSub').textContent='No hotel selected';
     return;
   }
@@ -705,7 +705,7 @@ function rLog(el){
       <div class="ds"><div class="dsv">${dt?dt.team_members:'-'}</div><div class="dsl">${t('tm')}</div></div>
     </div>
   </div>`;
-  if(!filtered.length)html+=`<div class="empty"><div class="ei">📭</div>${t('noEnt')}</div>`;
+  if(!filtered.length)html+=`<div class="empty">${t('noEnt')}</div>`;
   else filtered.forEach(r=>{
     const v=calcV(r,r.hotel_code),rooms=tRooms(r,r.hotel_code);
     const col=v?vc(v.vm):'var(--text3)';const rCol=rc(r.rating);
@@ -936,7 +936,7 @@ function rAnalytics(el){
     <button class="ebtn" style="margin-bottom:0" onclick="expDateRange()">${t('expRange')}</button>
   </div>
   <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">${t('perfTitle')}</div>`;
-  if(!names.length)html+=`<div class="empty"><div class="ei">📊</div>${t('noData')}</div>`;
+  if(!names.length)html+=`<div class="empty">${t('noData')}</div>`;
   else names.forEach(n=>html+=staffCard(n,rf,hotel));
   el.innerHTML=html;
 }
@@ -999,7 +999,7 @@ function rOwner(el){
       ${[['day',t('tod')],['week',t('l7')],['month',t('mon')],['all',t('all')]].map(([v,l])=>
         `<button class="pill ${aRange===v?'active':''}" onclick="aRange='${v}';render()">${l}</button>`).join('')}
     </div>`;
-    if(!names.length)html+=`<div class="empty"><div class="ei">📊</div>${t('noData')}</div>`;
+    if(!names.length)html+=`<div class="empty">${t('noData')}</div>`;
     else names.forEach(n=>html+=staffCard(n,rf,oDrill));
     el.innerHTML=html;return;
   }

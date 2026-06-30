@@ -434,6 +434,9 @@ async function loadAll(){
 async function saveRec(){
   if(!form.date||!form.name)return toast(t('dateReq'),false);
   if(!form.clock_out.trim())return toast(t('coReq'),false);
+  const today=new Date().toISOString().slice(0,10);
+  const minOk=new Date(Date.now()-90*24*60*60*1000).toISOString().slice(0,10);
+  if(form.date>today||form.date<minOk)return toast(lang==='es'?'Fecha inválida — usa la fecha de hoy':'Invalid date — use today\'s date',false);
 
   try{
     const p={...form,hotel_code:hotel};
@@ -879,11 +882,13 @@ function rEntry(el){
 
   const staffOpts=staff.map(n=>`<option value="${n}">${n}</option>`).join('');
 
+  const _today=new Date().toISOString().slice(0,10);
+  const _minDate=new Date(Date.now()-90*24*60*60*1000).toISOString().slice(0,10);
   el.innerHTML=`<div class="card">
     <div class="card-title">${editId?t('editE'):t('newE')}</div>
     <div class="g2">
       <div class="field"><label class="fl">${t('date')} *</label>
-        <input type="date" class="fi" id="entry_date" value="${form.date}"/></div>
+        <input type="date" class="fi" id="entry_date" value="${form.date||_today}" min="${_minDate}" max="${_today}"/></div>
       <div class="field"><label class="fl">${t('hk')} *</label>
         <select class="fs" id="entry_name">
           <option value="">${t('selHK')}</option>
@@ -941,6 +946,9 @@ function rEntry(el){
       <button class="btn btns" id="btn_cancel">${t('cancel')}</button>
     </div>
   </div>`;
+
+  // Default date to today for new entries
+  if(!form.date){form.date=_today;}
 
   // Wire up ALL events via addEventListener - no inline handlers
   const dateEl=document.getElementById('entry_date');

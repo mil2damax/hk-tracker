@@ -774,6 +774,8 @@ function rLog(el){
     .filter(r=>r.hotel_code===hotel&&(!fDate||r.date===fDate)&&(fName==='All'||r.name===fName))
     .sort((a,b)=>b.date.localeCompare(a.date)||a.name.localeCompare(b.name));
   const dt=dtMap[dd];const cfg=h();
+  // Count pending GM reviews for this hotel
+  const pendingReview=recs.filter(r=>r.hotel_code===hotel&&!r.gm_reviewed&&(r.pet>0||r.bad_rooms>0||r.deep_cleans>0||r.public_area>0));
   let html=`<div class="fr">
     <input type="date" value="${fDate}" onchange="fDate=this.value;render()"/>
     <select onchange="fName=this.value;render()">
@@ -782,6 +784,14 @@ function rLog(el){
     </select>
     ${fDate||fName!=='All'?`<button class="fc" onclick="fDate='';fName='All';render()">✕</button>`:''}
   </div>
+  ${pendingReview.length>0?`<div style="display:flex;align-items:center;gap:10px;background:#fef3c7;border:1.5px solid #f59e0b;border-radius:10px;padding:10px 14px;margin-bottom:12px">
+    <div style="font-size:20px;font-weight:800;font-family:var(--mono);color:#92400e;min-width:28px">${pendingReview.length}</div>
+    <div>
+      <div style="font-size:12px;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:.06em">${lang==='es'?'Pendiente Revisión GM':'Pending GM Review'}</div>
+      <div style="font-size:11px;color:#78350f;margin-top:1px">${lang==='es'?'Entradas con pet, hab. malas, limpiezas o área pública sin confirmar':'Entries with pet, bad rooms, deep cleans, or public area unconfirmed'}</div>
+    </div>
+    <button onclick="fDate='';fName='All';render()" style="margin-left:auto;padding:5px 10px;background:#f59e0b;border:none;border-radius:6px;color:#1a1a14;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font);white-space:nowrap">${lang==='es'?'Ver Todo':'View All'}</button>
+  </div>`:''}
   <div class="db">
     <div class="dbt"><span>${t('dtTitle')} — ${fd(dd)}</span>
       <button onclick="showDTForm('${dd}')" style="background:none;border:1px solid rgba(79,142,247,.4);border-radius:5px;color:var(--blue);padding:2px 8px;font-size:10px;cursor:pointer;font-family:var(--font);font-weight:600">${t('editDay')}</button></div>

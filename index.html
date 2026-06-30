@@ -373,7 +373,7 @@ const T={
 // ── State ─────────────────────────────────────────────────────────────────────
 let lang='en',tab='log',hotel=null,isOwner=false;
 let recs=[],staff=[],dtMap={};
-let loading=false,editId=null,fDate='',fName='All';
+let loading=false,editId=null,fDate='',fName='All',fPending=false;
 let aRange='week',oDrill=null;
 let newName='',setUnlocked=false,toastT=null;
 let form=ef();
@@ -577,7 +577,7 @@ function pickOwner(){
   },'owner');
 }
 function setHotel(code){
-  hotel=code;isOwner=false;setUnlocked=false;fDate='';fName='All';form=ef();editId=null;oDrill=null;
+  hotel=code;isOwner=false;setUnlocked=false;fDate='';fName='All';fPending=false;form=ef();editId=null;oDrill=null;
   localStorage.setItem('hk_last',code);
   updUI();loadAll();
   if(tab==='settings')switchTab('log');
@@ -774,7 +774,7 @@ function render(){
 function rLog(el){
   const dd=fDate||new Date().toISOString().slice(0,10);
   const filtered=recs
-    .filter(r=>r.hotel_code===hotel&&(!fDate||r.date===fDate)&&(fName==='All'||r.name===fName))
+    .filter(r=>r.hotel_code===hotel&&(!fDate||r.date===fDate)&&(fName==='All'||r.name===fName)&&(!fPending||(!r.gm_reviewed&&(r.pet>0||r.bad_rooms>0||r.deep_cleans>0||r.public_area>0))))
     .sort((a,b)=>b.date.localeCompare(a.date)||a.name.localeCompare(b.name));
   const dt=dtMap[dd];const cfg=h();
   // Count pending GM reviews for this hotel
@@ -785,15 +785,16 @@ function rLog(el){
       <option value="All">${t('allStaff')}</option>
       ${staff.map(n=>`<option value="${n}" ${fName===n?'selected':''}>${n}</option>`).join('')}
     </select>
-    ${fDate||fName!=='All'?`<button class="fc" onclick="fDate='';fName='All';render()">✕</button>`:''}
+    ${fDate||fName!=='All'||fPending?`<button class="fc" onclick="fDate='';fName='All';fPending=false;render()">✕</button>`:''}
   </div>
+  ${fPending?`<div style="background:#fff7ed;border:1.5px solid #f59e0b;border-radius:8px;padding:7px 12px;margin-bottom:10px;font-size:12px;font-weight:600;color:#92400e;display:flex;justify-content:space-between;align-items:center">${lang==='es'?'Mostrando solo pendientes de revisión GM':'Showing only pending GM review entries'}<button onclick="fPending=false;render()" style="background:none;border:none;color:#92400e;font-size:16px;cursor:pointer;line-height:1">✕</button></div>`:''}
   ${pendingReview.length>0?`<div style="display:flex;align-items:center;gap:10px;background:#fef3c7;border:1.5px solid #f59e0b;border-radius:10px;padding:10px 14px;margin-bottom:12px">
     <div style="font-size:20px;font-weight:800;font-family:var(--mono);color:#92400e;min-width:28px">${pendingReview.length}</div>
     <div>
       <div style="font-size:12px;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:.06em">${lang==='es'?'Pendiente Revisión GM':'Pending GM Review'}</div>
       <div style="font-size:11px;color:#78350f;margin-top:1px">${lang==='es'?'Entradas con pet, hab. malas, limpiezas o área pública sin confirmar':'Entries with pet, bad rooms, deep cleans, or public area unconfirmed'}</div>
     </div>
-    <button onclick="fDate='';fName='All';render()" style="margin-left:auto;padding:5px 10px;background:#f59e0b;border:none;border-radius:6px;color:#1a1a14;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font);white-space:nowrap">${lang==='es'?'Ver Todo':'View All'}</button>
+    <button onclick="fPending=true;fDate='';fName='All';render()" style="margin-left:auto;padding:5px 10px;background:#f59e0b;border:none;border-radius:6px;color:#1a1a14;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font);white-space:nowrap">${lang==='es'?'Ver Todo':'View All'}</button>
   </div>`:''}
   <div class="db">
     <div class="dbt"><span>${t('dtTitle')} — ${fd(dd)}</span>
